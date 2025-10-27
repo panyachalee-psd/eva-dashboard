@@ -2,7 +2,8 @@
   "compilerOptions": {
     "target": "esnext",                   
     "module": "esnext",                   
-    "lib": ["dom", "esnext"],             
+    "lib": ["dom", "esnext"],   
+    "types": ["jest", "node"],          
     "jsx": "react-jsx",                   
     "moduleResolution": "node",           
     "esModuleInterop": true,              

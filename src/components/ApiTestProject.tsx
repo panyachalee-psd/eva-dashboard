@@ -11,31 +11,12 @@ import { Card, CardContent, CardHeader, CardTitle } from "./ui/card";
 import moment from "moment";
 import axios from "axios";
 
-
-// ✅ Define your data type
-// interface Customer {
-//   id: number;
-//   name: string;
-//   country: string;
-//   status: string;
-// }
 interface Axel {
   weight: number
   left_weight: number,
   right_weight: number
 }
 
-// interface VehcleViol {
-//   id: number;
-//   vehicle: string;
-//   type: string;
-//   actWeight: number;
-//   limit: number;
-//   excess: number;
-//   station: string;
-//   time: string;
-//   severity: string;
-// }
 interface VehcleViol extends Axel {
   id: string;
   crossingIndexCode: string;
@@ -58,87 +39,15 @@ interface VehcleViol extends Axel {
   createdAt: string;
 }
 
-
 // ✅ Define lazy state type
 interface LazyState {
   first: number;
   rows: number;
   page: number;
   sortField?: string;
-  sortOrder?: 1 | -1 | 0 | null | undefined; // <-- add null here
+  sortOrder?: 1 | -1 | 0 | null | undefined;
   filters: Record<string, any>;
 }
-
-// ✅ Mock API (replace this with your real backend)
-// async function fetchCustomersFromApi({
-//   page,
-//   rows,
-//   sortField,
-//   sortOrder,
-//   filters,
-// }: {
-//   page: number;
-//   rows: number;
-//   sortField?: string;
-//   sortOrder?: 1 | -1 | 0 | null;
-//   filters: Record<string, any>;
-// }): Promise<{ data: Customer[]; total: number }> {
-//   // Simulate API call delay
-//   await new Promise((r) => setTimeout(r, 600));
-
-//   // Example mock data
-//   const data = Array.from({ length: rows }, (_, i) => ({
-//     id: page * rows + i + 1,
-//     name: `Customer ${page * rows + i + 1}`,
-//     country: ["Japan", "Thailand", "Singapore", "USA"][i % 4],
-//     status: i % 2 === 0 ? "Active" : "Inactive",
-//   }));
-
-//   return { data, total: 100 }; // total record count
-// }
-
-// async function fetchViolVehicleFromApi({
-//   page,
-//   rows,
-//   sortField,
-//   sortOrder,
-//   filters,
-// }: {
-//   page: number;
-//   rows: number;
-//   sortField?: string;
-//   sortOrder?: 1 | -1 | 0 | null;
-//   filters: Record<string, any>;
-// }): Promise<{ data: VehcleViol[]; total: number }> {
-//   // Simulate API call delay
-//   // await new Promise((r) => setTimeout(r, 600));
-
-//   // const date = moment();
-//   // const formattedDate = date.format("YYYY-MM-DD HH:MM");
-//   // // Example mock data
-//   // const data = Array.from({ length: rows }, (_, i) => ({
-//   //   id: page * rows + i + 1,
-//   //   vehicle: `Plate No. AB${page * rows + i + 1}`,
-//   //   type: ["Heavy Truck", "Semi Trailer", "Truck"][i % 3],
-//   //   actWeight: [300, 200, 100][i % 3],
-//   //   limit: [300, 200, 100][i % 3],
-//   //   excess: [10, 20, 30, 40, 50][i % 5],
-//   //   station:  i % 2 === 0 ? "XY1" : "XY2",
-//   //   time: formattedDate,
-//   //   severity: ["L", "M", "H"][i % 3],
-//   // }));
-//    await axios
-//       .get("https://93xp01kx-3000.asse.devtunnels.ms/wim")
-//       .then((res) => {
-//         console.log('res', res.data);
-//         // total = res.totalItems
-        
-//       })
-//       .catch(console.error);
-
-//   return { data, 122 }; // total record count
-// }
-
 
 async function fetchViolVehicleFromApi({
   page,
@@ -154,64 +63,59 @@ async function fetchViolVehicleFromApi({
   filters: Record<string, any>;
 }): Promise<{ data: VehcleViol[]; total: number }> {
   try {
-    // const res = await axios.get("http://85.204.247.82:3007/wim?page={page}&size=10&orderBy=name&orderSort");
-    const sortOrderValue =
-  sortOrder === 1 ? "asc" : sortOrder === -1 ? "desc" : undefined;
-    
+    console.log('hi fetch', page);
+    console.log('hi fetch', rows);
+    console.log('hi fetch', sortField);
+
+    const sortOrderValue = sortOrder === 1 ? "ASC" : sortOrder === -1 ? "DESC" : undefined;
+    console.log('hi fetch', sortOrderValue);
+  
     const res = await axios.get('http://85.204.247.82:3007/wim', {
           params: {
-            // dynamicValue will be sent as a query parameter (e.g., ?paramName=dynamicValue)
-            page: page, 
-            perPage: rows, // You can also include static parameters
-            orderBy: sortField,
-            orderSort: sortOrderValue
+            page: page,
+            perPage: rows,
+            sortBy: sortField,
+            sortOrder: sortOrderValue
           }
         });
 
-    // ✅ The real data is inside res.data
     const apiData = res.data;
 
-    console.log('res', res);
+    console.log('res.data', res.data);
     
 
-    // Your API already returns an array under "data"
     let allData: VehcleViol[] = apiData.data;
-    const total: number = apiData.totalItems; // ✅ Correctly reference here
+    const total: number = apiData.totalItems;
 
     // Optional: Apply local pagination (if API doesn’t handle it)
-    const start = (page - 1) * rows;
-    const end = start + rows;
+    // const start = (page - 1) * rows;
+    // const end = start + rows;
       console.log('allData', allData);
 
-    // let paginatedData = [];
-      // console.log('paginatedData', paginatedData);
-
     // Optional: Apply local sorting
-    if (sortField && sortOrder) {
-      allData = [...allData].sort((a, b) => {
-        const valA = (a as any)[sortField];
-        const valB = (b as any)[sortField];
-        if (valA < valB) return sortOrder === 1 ? -1 : 1;
-        if (valA > valB) return sortOrder === 1 ? 1 : -1;
-        return 0;
-      });
-    }
+    // if (sortField && sortOrder) {
+    //   allData = [...allData].sort((a, b) => {
+    //     const valA = (a as any)[sortField];
+    //     const valB = (b as any)[sortField];
+    //     if (valA < valB) return sortOrder === 1 ? -1 : 1;
+    //     if (valA > valB) return sortOrder === 1 ? 1 : -1;
+    //     return 0;
+    //   });
+    // }
 
     // Optional: Apply filtering
-    const globalFilter = filters?.global?.value?.toLowerCase();
-    const filteredData = globalFilter
-      ? allData.filter((item) =>
-          Object.values(item).some((val) =>
-            String(val).toLowerCase().includes(globalFilter)
-          )
-        )
-      : allData;
-
-      console.log('filteredData', filteredData);
+    // const globalFilter = filters?.global?.value?.toLowerCase();
+    // const filteredData = globalFilter
+    //   ? allData.filter((item) =>
+    //       Object.values(item).some((val) =>
+    //         String(val).toLowerCase().includes(globalFilter)
+    //       )
+    //     )
+    //   : allData;
+    //   console.log('filteredData', filteredData);
       
-
     return {
-      data: filteredData,
+      data: allData,
       total, // ✅ total from API, not local length
     };
   } catch (error) {
@@ -232,32 +136,17 @@ export default function CustomerTable(): JSX.Element {
 
   const [lazyState, setLazyState] = useState<LazyState>({
     first: 0,
-    rows: 10,
+    rows: 5,
     page: 0,
     sortField: undefined,
     sortOrder: undefined,
     filters: {
       global: { value: null, matchMode: FilterMatchMode.CONTAINS },
-      vehicle: { value: null, matchMode: FilterMatchMode.CONTAINS },
-      type: { value: null, matchMode: FilterMatchMode.CONTAINS },
-      station: { value: null, matchMode: FilterMatchMode.EQUALS },
+      plate: { value: null, matchMode: FilterMatchMode.CONTAINS },
+      vehicleType: { value: null, matchMode: FilterMatchMode.EQUALS },
+      speed: { value: null, matchMode: FilterMatchMode.EQUALS },
     },
   });
-
-  // ✅ Load customers from API
-  // const loadCustomers = async () => {
-  //   setLoading(true);
-  //   const { data, total } = await fetchCustomersFromApi({
-  //     page: lazyState.page,
-  //     rows: lazyState.rows,
-  //     sortField: lazyState.sortField,
-  //     sortOrder: lazyState.sortOrder,
-  //     filters: lazyState.filters,
-  //   });
-  //   setCustomers(data);
-  //   setTotalRecords(total);
-  //   setLoading(false);
-  // };
 
     const loadViolateVehicle = async () => {
     setLoading(true);
@@ -268,17 +157,15 @@ export default function CustomerTable(): JSX.Element {
       sortOrder: lazyState.sortOrder,
       filters: lazyState.filters,
     });
-    console.log(data);
 
     setVehicle(data);
     setTotalRecords(total);
     setLoading(false);
   };
 
-  useEffect(() => {
-    // loadCustomers();
-    loadViolateVehicle()    
-  }, [lazyState]); // eslint-disable-line react-hooks/exhaustive-deps
+ useEffect(() => {
+  loadViolateVehicle();
+}, [lazyState.page, lazyState.rows, lazyState.sortField, lazyState.sortOrder, lazyState.filters.global?.value]);
 
   // ✅ DataTable event handlers
   const onPage = (event: DataTablePageEvent) => setLazyState((prev) => ({ ...prev, ...event }));
@@ -344,7 +231,6 @@ export default function CustomerTable(): JSX.Element {
         <Column
           field="plate"
           header="Vehicle"
-          sortable
           filter
           filterPlaceholder="Search vehicle"
           headerStyle={{ textAlign: "center" }}
