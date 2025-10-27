@@ -34,6 +34,7 @@ export function Sidebar({
     { id: "user", label: "User", icon: Users },
     { id: "project", label: "Project", icon: FolderOpen },
     { id: "settings", label: "Settings", icon: Settings },
+    { id: "testapi", label: "test Api", icon: Cloud },
   ];
 
   const sidebarClasses = cn(

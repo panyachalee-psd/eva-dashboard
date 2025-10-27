@@ -6,7 +6,7 @@ import { Badge } from "./ui/badge";
 import { Table, TableBody, TableCell, TableHead, TableHeader, TableRow } from "./ui/table";
 import { BarChart, Bar, XAxis, YAxis, CartesianGrid, Tooltip, ResponsiveContainer, LineChart, Line, PieChart, Pie, Cell } from "recharts";
 import { Progress } from "./ui/progress";
-
+import  CustomerTable from "../components/ApiTestProject"
 const weightDistributionData = [
   { range: "0-10t", count: 145 },
   { range: "10-20t", count: 320 },
@@ -282,7 +282,8 @@ export function WIMDashboard() {
           <CardTitle>Recent Weight Violations</CardTitle>
         </CardHeader>
         <CardContent>
-          <Table>
+          <CustomerTable />
+          {/* <Table>
             <TableHeader>
               <TableRow>
                 <TableHead>Violation ID</TableHead>
@@ -323,7 +324,7 @@ export function WIMDashboard() {
                 </TableRow>
               ))}
             </TableBody>
-          </Table>
+          </Table> */}
         </CardContent>
       </Card>
 
