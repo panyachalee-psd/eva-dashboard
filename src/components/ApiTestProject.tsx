@@ -224,7 +224,6 @@ export default function CustomerTable(): JSX.Element {
           body={(_, options) =>
     vehicles.length > 0 ? lazyState.first + options.rowIndex + 1 : "-"}
           header="ID"
-          sortable
           style={{ width: "10%", textAlign: "center" }}
           alignHeader="center"
         />
@@ -239,7 +238,6 @@ export default function CustomerTable(): JSX.Element {
         <Column
           field="vehicleType"
           header="Type"
-          sortable
           filter
           filterPlaceholder="Search country"
           headerStyle={{ textAlign: "center" }}
@@ -262,16 +260,14 @@ export default function CustomerTable(): JSX.Element {
          <Column
           field="outcome"
           header="Excess"
-          sortable
           headerStyle={{ textAlign: "center" }}
           body={(rowData) => emptyTemplate(rowData.outcome)}
         />
          <Column
-          field="speed"
-          header="Speed"
-          sortable
+          field="lane"
+          header="Station"
           filter
-          filterPlaceholder="Search speed"
+          filterPlaceholder="Search Station"
           headerStyle={{ textAlign: "center" }}
         />
          <Column
@@ -284,7 +280,6 @@ export default function CustomerTable(): JSX.Element {
          <Column
           field="severity"
           header="Severity"
-          sortable
           headerStyle={{ textAlign: "center" }}
           body={(rowData) => emptyTemplate(rowData.severity)}
         />
