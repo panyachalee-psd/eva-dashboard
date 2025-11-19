@@ -1,10 +1,21 @@
-import { useState } from "react";
-import { Cloud, CloudRain, Sun, Wind, Thermometer, Droplets, Eye, Gauge } from "lucide-react";
+// import { useState } from "react";
+import { Cloud, Wind, Thermometer, Droplets, Eye, Gauge } from "lucide-react";
+// , CloudRain, Sun
 import { Card, CardContent, CardHeader, CardTitle } from "./ui/card";
 import { StatCard } from "./StatCard";
 import { Button } from "./ui/button";
 import { Badge } from "./ui/badge";
-import { LineChart, Line, XAxis, YAxis, CartesianGrid, Tooltip, ResponsiveContainer, AreaChart, Area } from "recharts";
+import {
+  LineChart,
+  Line,
+  XAxis,
+  YAxis,
+  CartesianGrid,
+  Tooltip,
+  ResponsiveContainer,
+  AreaChart,
+  Area,
+} from "recharts";
 
 const temperatureData = [
   { time: "00:00", temp: 18, humidity: 65 },
@@ -25,14 +36,46 @@ const windData = [
 ];
 
 const sensorStations = [
-  { id: "WS001", name: "Station Alpha", location: "North Building", status: "active", temp: 24, humidity: 58, windSpeed: 15 },
-  { id: "WS002", name: "Station Beta", location: "South Campus", status: "active", temp: 26, humidity: 62, windSpeed: 12 },
-  { id: "WS003", name: "Station Gamma", location: "East Wing", status: "maintenance", temp: 22, humidity: 55, windSpeed: 8 },
-  { id: "WS004", name: "Station Delta", location: "West Parking", status: "active", temp: 25, humidity: 60, windSpeed: 18 },
+  {
+    id: "WS001",
+    name: "Station Alpha",
+    location: "North Building",
+    status: "active",
+    temp: 24,
+    humidity: 58,
+    windSpeed: 15,
+  },
+  {
+    id: "WS002",
+    name: "Station Beta",
+    location: "South Campus",
+    status: "active",
+    temp: 26,
+    humidity: 62,
+    windSpeed: 12,
+  },
+  {
+    id: "WS003",
+    name: "Station Gamma",
+    location: "East Wing",
+    status: "maintenance",
+    temp: 22,
+    humidity: 55,
+    windSpeed: 8,
+  },
+  {
+    id: "WS004",
+    name: "Station Delta",
+    location: "West Parking",
+    status: "active",
+    temp: 25,
+    humidity: 60,
+    windSpeed: 18,
+  },
 ];
 
 export function WeatherSensorDashboard() {
-  const [selectedStation, setSelectedStation] = useState("all");
+  // const [selectedStation, setSelectedStation] = useState("all");
 
   return (
     <div className="space-y-6">
@@ -46,9 +89,7 @@ export function WeatherSensorDashboard() {
             <Cloud className="h-4 w-4 mr-2" />
             Generate Report
           </Button>
-          <Button size="sm">
-            Configure Alerts
-          </Button>
+          <Button size="sm">Configure Alerts</Button>
         </div>
       </div>
 
@@ -58,28 +99,32 @@ export function WeatherSensorDashboard() {
           title="Active Stations"
           value="12"
           change="+2"
-          icon={<Gauge className="h-5 w-5" />}
+          // icon={<Gauge className="h-5 w-5" />}
+          icon={Gauge}
           trend="up"
         />
         <StatCard
           title="Avg Temperature"
           value="24.5°C"
           change="+1.2°C"
-          icon={<Thermometer className="h-5 w-5" />}
+          // icon={<Thermometer className="h-5 w-5" />}
+          icon={Thermometer}
           trend="up"
         />
         <StatCard
           title="Humidity"
           value="58%"
           change="-3%"
-          icon={<Droplets className="h-5 w-5" />}
+          // icon={<Droplets className="h-5 w-5" />}
+          icon={Droplets}
           trend="down"
         />
         <StatCard
           title="Wind Speed"
           value="15 km/h"
           change="+5 km/h"
-          icon={<Wind className="h-5 w-5" />}
+          // icon={<Wind className="h-5 w-5" />}
+          icon={Wind}
           trend="up"
         />
       </div>
@@ -101,8 +146,22 @@ export function WeatherSensorDashboard() {
                 <YAxis yAxisId="temp" orientation="left" />
                 <YAxis yAxisId="humidity" orientation="right" />
                 <Tooltip />
-                <Line yAxisId="temp" type="monotone" dataKey="temp" stroke="#ff6b35" strokeWidth={2} name="Temperature (°C)" />
-                <Line yAxisId="humidity" type="monotone" dataKey="humidity" stroke="#60a5fa" strokeWidth={2} name="Humidity (%)" />
+                <Line
+                  yAxisId="temp"
+                  type="monotone"
+                  dataKey="temp"
+                  stroke="#ff6b35"
+                  strokeWidth={2}
+                  name="Temperature (°C)"
+                />
+                <Line
+                  yAxisId="humidity"
+                  type="monotone"
+                  dataKey="humidity"
+                  stroke="#60a5fa"
+                  strokeWidth={2}
+                  name="Humidity (%)"
+                />
               </LineChart>
             </ResponsiveContainer>
           </CardContent>
@@ -122,7 +181,14 @@ export function WeatherSensorDashboard() {
                 <XAxis dataKey="time" />
                 <YAxis />
                 <Tooltip />
-                <Area type="monotone" dataKey="speed" stroke="#ff6b35" fill="#ff6b35" fillOpacity={0.3} name="Wind Speed (km/h)" />
+                <Area
+                  type="monotone"
+                  dataKey="speed"
+                  stroke="#ff6b35"
+                  fill="#ff6b35"
+                  fillOpacity={0.3}
+                  name="Wind Speed (km/h)"
+                />
               </AreaChart>
             </ResponsiveContainer>
           </CardContent>
@@ -140,7 +206,10 @@ export function WeatherSensorDashboard() {
         <CardContent>
           <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-4">
             {sensorStations.map((station) => (
-              <div key={station.id} className="p-4 border rounded-lg hover:bg-muted/50 transition-colors">
+              <div
+                key={station.id}
+                className="p-4 border rounded-lg hover:bg-muted/50 transition-colors"
+              >
                 <div className="flex items-center justify-between mb-3">
                   <h4 className="font-medium">{station.name}</h4>
                   <Badge variant={station.status === "active" ? "default" : "secondary"}>
@@ -148,7 +217,7 @@ export function WeatherSensorDashboard() {
                   </Badge>
                 </div>
                 <p className="text-sm text-muted-foreground mb-3">{station.location}</p>
-                
+
                 <div className="space-y-2">
                   <div className="flex items-center justify-between text-sm">
                     <span className="flex items-center gap-1">
@@ -191,13 +260,15 @@ export function WeatherSensorDashboard() {
             <div className="flex items-center justify-between p-3 border border-yellow-200 bg-yellow-50 rounded-lg">
               <div>
                 <h5 className="font-medium text-yellow-800">High Wind Speed Alert</h5>
-                <p className="text-sm text-yellow-600">Station Delta: Wind speed exceeding 25 km/h</p>
+                <p className="text-sm text-yellow-600">
+                  Station Delta: Wind speed exceeding 25 km/h
+                </p>
               </div>
               <Badge variant="outline" className="border-yellow-300 text-yellow-700">
                 Active
               </Badge>
             </div>
-            
+
             <div className="flex items-center justify-between p-3 border border-blue-200 bg-blue-50 rounded-lg">
               <div>
                 <h5 className="font-medium text-blue-800">Low Humidity Warning</h5>
@@ -207,7 +278,7 @@ export function WeatherSensorDashboard() {
                 Monitoring
               </Badge>
             </div>
-            
+
             <div className="flex items-center justify-between p-3 border border-red-200 bg-red-50 rounded-lg">
               <div>
                 <h5 className="font-medium text-red-800">Station Offline</h5>

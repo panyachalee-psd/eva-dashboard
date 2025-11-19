@@ -7,9 +7,16 @@ interface StatCardProps {
   change?: string;
   changeType?: "positive" | "negative" | "neutral";
   icon: LucideIcon;
+  trend?: "up" | "down" | "neutral";
 }
 
-export function StatCard({ title, value, change, changeType = "neutral", icon: Icon }: StatCardProps) {
+export function StatCard({
+  title,
+  value,
+  change,
+  changeType = "neutral",
+  icon: Icon,
+}: StatCardProps) {
   const getChangeColor = () => {
     switch (changeType) {
       case "positive":
@@ -29,11 +36,7 @@ export function StatCard({ title, value, change, changeType = "neutral", icon: I
       </CardHeader>
       <CardContent>
         <div className="text-2xl font-bold text-foreground">{value}</div>
-        {change && (
-          <p className={`text-xs ${getChangeColor()}`}>
-            {change}
-          </p>
-        )}
+        {change && <p className={`text-xs ${getChangeColor()}`}>{change}</p>}
       </CardContent>
     </Card>
   );

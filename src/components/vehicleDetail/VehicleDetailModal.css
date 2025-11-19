@@ -1,0 +1,11 @@
+.text-gray {
+ color: #9CA3AF;
+}
+
+.text-green {
+    color: #048018;
+}
+
+.my-divider.p-divider-horizontal {
+  background-color: #048018 !important;
+}

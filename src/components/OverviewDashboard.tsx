@@ -1,7 +1,20 @@
-import { Monitor, Navigation, Gauge, TrendingUp, AlertTriangle, CheckCircle, Scale } from "lucide-react";
+import { Monitor, Navigation, Gauge, AlertTriangle, CheckCircle, Scale } from "lucide-react";
+// TrendingUp
 import { StatCard } from "./StatCard";
 import { Card, CardContent, CardHeader, CardTitle } from "./ui/card";
-import { LineChart, Line, XAxis, YAxis, CartesianGrid, Tooltip, ResponsiveContainer, BarChart, Bar, PieChart, Pie, Cell } from "recharts";
+import {
+  LineChart,
+  Line,
+  XAxis,
+  YAxis,
+  CartesianGrid,
+  Tooltip,
+  ResponsiveContainer,
+  PieChart,
+  Pie,
+  Cell,
+} from "recharts";
+// BarChart, Bar,
 
 const lineData = [
   { name: "Jan", vms: 400, lms: 240, wim: 320, iot: 140 },
@@ -24,7 +37,9 @@ export function OverviewDashboard() {
     <div className="space-y-6">
       <div>
         <h2 className="text-2xl font-bold text-foreground mb-2">System Overview</h2>
-        <p className="text-muted-foreground">Monitor all integrated systems from a single dashboard</p>
+        <p className="text-muted-foreground">
+          Monitor all integrated systems from a single dashboard
+        </p>
       </div>
 
       {/* Stats Grid */}
@@ -134,7 +149,9 @@ export function OverviewDashboard() {
               <AlertTriangle className="h-5 w-5 text-orange-600" />
               <div className="flex-1">
                 <p className="font-medium text-orange-900">Message Update Required</p>
-                <p className="text-sm text-orange-700">City Center VMS needs traffic diversion update</p>
+                <p className="text-sm text-orange-700">
+                  City Center VMS needs traffic diversion update
+                </p>
               </div>
               <span className="text-xs text-orange-600">15 min ago</span>
             </div>
@@ -142,7 +159,9 @@ export function OverviewDashboard() {
               <CheckCircle className="h-5 w-5 text-green-600" />
               <div className="flex-1">
                 <p className="font-medium text-green-900">VMS Message Updated</p>
-                <p className="text-sm text-green-700">Highway signs updated with new traffic information</p>
+                <p className="text-sm text-green-700">
+                  Highway signs updated with new traffic information
+                </p>
               </div>
               <span className="text-xs text-green-600">1 hour ago</span>
             </div>

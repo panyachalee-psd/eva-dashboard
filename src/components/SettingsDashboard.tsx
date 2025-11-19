@@ -1,4 +1,5 @@
-import { Settings, User, Bell, Shield, Palette, Monitor } from "lucide-react";
+import { User, Bell, Shield, Monitor } from "lucide-react";
+// Settings, Palette
 import { Card, CardContent, CardHeader, CardTitle } from "./ui/card";
 import { Button } from "./ui/button";
 import { Input } from "./ui/input";
@@ -127,7 +128,9 @@ export function SettingsDashboard() {
               </div>
               <Switch defaultChecked />
             </div>
-            <Button variant="outline" className="w-full">Change Password</Button>
+            <Button variant="outline" className="w-full">
+              Change Password
+            </Button>
           </CardContent>
         </Card>
 
@@ -288,9 +291,9 @@ export function SettingsDashboard() {
               </div>
             </div>
           </div>
-          
+
           <Separator className="my-6" />
-          
+
           <div className="flex justify-end space-x-4">
             <Button variant="outline">Reset to Default</Button>
             <Button>Save Configuration</Button>

@@ -1,11 +1,30 @@
-import { Gauge, Zap, Thermometer, Wifi, MapPin, AlertTriangle, CheckCircle, Clock } from "lucide-react";
+import {
+  Gauge,
+  Zap,
+  Thermometer,
+  Wifi,
+  MapPin,
+  AlertTriangle,
+  CheckCircle,
+  Clock,
+} from "lucide-react";
 import { StatCard } from "./StatCard";
 import { Card, CardContent, CardHeader, CardTitle } from "./ui/card";
 import { Button } from "./ui/button";
 import { Badge } from "./ui/badge";
 import { Switch } from "./ui/switch";
 import { Table, TableBody, TableCell, TableHead, TableHeader, TableRow } from "./ui/table";
-import { LineChart, Line, XAxis, YAxis, CartesianGrid, Tooltip, ResponsiveContainer, AreaChart, Area } from "recharts";
+import {
+  LineChart,
+  Line,
+  XAxis,
+  YAxis,
+  CartesianGrid,
+  Tooltip,
+  ResponsiveContainer,
+  AreaChart,
+  Area,
+} from "recharts";
 
 const sensorData = [
   { time: "00:00", temperature: 22, humidity: 65, speed: 45 },
@@ -17,11 +36,46 @@ const sensorData = [
 ];
 
 const iotDevices = [
-  { id: "SPD-001", name: "Speed Enforcement Cam 1", location: "Highway A", status: "online", lastUpdate: "2 min ago", violations: 12 },
-  { id: "SPD-002", name: "Speed Enforcement Cam 2", location: "School Zone B", status: "online", lastUpdate: "1 min ago", violations: 8 },
-  { id: "SPD-003", name: "Speed Enforcement Cam 3", location: "Downtown", status: "offline", lastUpdate: "15 min ago", violations: 0 },
-  { id: "ENV-001", name: "Environmental Sensor 1", location: "Building A", status: "online", lastUpdate: "30 sec ago", violations: 0 },
-  { id: "ENV-002", name: "Environmental Sensor 2", location: "Building B", status: "online", lastUpdate: "45 sec ago", violations: 2 },
+  {
+    id: "SPD-001",
+    name: "Speed Enforcement Cam 1",
+    location: "Highway A",
+    status: "online",
+    lastUpdate: "2 min ago",
+    violations: 12,
+  },
+  {
+    id: "SPD-002",
+    name: "Speed Enforcement Cam 2",
+    location: "School Zone B",
+    status: "online",
+    lastUpdate: "1 min ago",
+    violations: 8,
+  },
+  {
+    id: "SPD-003",
+    name: "Speed Enforcement Cam 3",
+    location: "Downtown",
+    status: "offline",
+    lastUpdate: "15 min ago",
+    violations: 0,
+  },
+  {
+    id: "ENV-001",
+    name: "Environmental Sensor 1",
+    location: "Building A",
+    status: "online",
+    lastUpdate: "30 sec ago",
+    violations: 0,
+  },
+  {
+    id: "ENV-002",
+    name: "Environmental Sensor 2",
+    location: "Building B",
+    status: "online",
+    lastUpdate: "45 sec ago",
+    violations: 2,
+  },
 ];
 
 const speedViolations = [
@@ -38,7 +92,9 @@ export function IoTDashboard() {
     <div className="space-y-6">
       <div>
         <h2 className="text-2xl font-bold text-foreground mb-2">IoT Tools & Monitoring</h2>
-        <p className="text-muted-foreground">Monitor and control IoT devices including speed enforcement systems</p>
+        <p className="text-muted-foreground">
+          Monitor and control IoT devices including speed enforcement systems
+        </p>
       </div>
 
       {/* IoT Stats */}
@@ -86,8 +142,20 @@ export function IoTDashboard() {
                 <XAxis dataKey="time" />
                 <YAxis />
                 <Tooltip />
-                <Line type="monotone" dataKey="temperature" stroke="#38a3a5" strokeWidth={2} name="Temperature (°C)" />
-                <Line type="monotone" dataKey="humidity" stroke="#57cc99" strokeWidth={2} name="Humidity (%)" />
+                <Line
+                  type="monotone"
+                  dataKey="temperature"
+                  stroke="#38a3a5"
+                  strokeWidth={2}
+                  name="Temperature (°C)"
+                />
+                <Line
+                  type="monotone"
+                  dataKey="humidity"
+                  stroke="#57cc99"
+                  strokeWidth={2}
+                  name="Humidity (%)"
+                />
               </LineChart>
             </ResponsiveContainer>
           </CardContent>
@@ -104,7 +172,13 @@ export function IoTDashboard() {
                 <XAxis dataKey="time" />
                 <YAxis />
                 <Tooltip />
-                <Area type="monotone" dataKey="violations" stroke="#38a3a5" fill="#38a3a5" fillOpacity={0.3} />
+                <Area
+                  type="monotone"
+                  dataKey="violations"
+                  stroke="#38a3a5"
+                  fill="#38a3a5"
+                  fillOpacity={0.3}
+                />
               </AreaChart>
             </ResponsiveContainer>
           </CardContent>
@@ -154,7 +228,7 @@ export function IoTDashboard() {
                     </div>
                   </TableCell>
                   <TableCell>
-                    <Badge variant={device.status === 'online' ? 'default' : 'destructive'}>
+                    <Badge variant={device.status === "online" ? "default" : "destructive"}>
                       {device.status}
                     </Badge>
                   </TableCell>
@@ -173,8 +247,10 @@ export function IoTDashboard() {
                   </TableCell>
                   <TableCell>
                     <div className="flex items-center space-x-2">
-                      <Switch checked={device.status === 'online'} />
-                      <Button variant="ghost" size="sm">Configure</Button>
+                      <Switch checked={device.status === "online"} />
+                      <Button variant="ghost" size="sm">
+                        Configure
+                      </Button>
                     </div>
                   </TableCell>
                 </TableRow>
@@ -208,7 +284,7 @@ export function IoTDashboard() {
                 </div>
               </div>
             </div>
-            
+
             <div className="space-y-4">
               <h4 className="font-medium">Alert Thresholds</h4>
               <div className="space-y-3">
@@ -226,7 +302,7 @@ export function IoTDashboard() {
                 </div>
               </div>
             </div>
-            
+
             <div className="space-y-4">
               <h4 className="font-medium">Recent Violations</h4>
               <div className="space-y-2">

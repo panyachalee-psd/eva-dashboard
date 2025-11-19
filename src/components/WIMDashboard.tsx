@@ -1,12 +1,27 @@
-import { Scale, TrendingUp, AlertTriangle, CheckCircle, MapPin, Truck, Activity, Database } from "lucide-react";
+import { Scale, AlertTriangle, Truck, Activity } from "lucide-react";
+// TrendingUp, CheckCircle, MapPin, Database
 import { StatCard } from "./StatCard";
 import { Card, CardContent, CardHeader, CardTitle } from "./ui/card";
 import { Button } from "./ui/button";
-import { Badge } from "./ui/badge";
-import { Table, TableBody, TableCell, TableHead, TableHeader, TableRow } from "./ui/table";
-import { BarChart, Bar, XAxis, YAxis, CartesianGrid, Tooltip, ResponsiveContainer, LineChart, Line, PieChart, Pie, Cell } from "recharts";
-import { Progress } from "./ui/progress";
-import  CustomerTable from "../components/ApiTestProject"
+// import { Badge } from "./ui/badge";
+// import { Table, TableBody, TableCell, TableHead, TableHeader, TableRow } from "./ui/table";
+import {
+  BarChart,
+  Bar,
+  XAxis,
+  YAxis,
+  CartesianGrid,
+  Tooltip,
+  ResponsiveContainer,
+  LineChart,
+  Line,
+} from "recharts";
+// , PieChart, Pie, Cell
+// import { Progress } from "./ui/progress";
+// import  CustomerTable from "../components/ApiTestProject"
+import CurrentMeasureTable from "../components/wimCurrentMeasurement/CurrentMeasure";
+import ViolatedTable from "../components/wimViolate/Violated";
+import { useTranslation } from "react-i18next";
 const weightDistributionData = [
   { range: "0-10t", count: 145 },
   { range: "10-20t", count: 320 },
@@ -24,71 +39,72 @@ const hourlyTrafficData = [
   { time: "20:00", vehicles: 156, violations: 6 },
 ];
 
-const axleLoadData = [
-  { name: "Front Axle", value: 35 },
-  { name: "Rear Axle", value: 45 },
-  { name: "Trailer", value: 20 },
-];
+// const axleLoadData = [
+//   { name: "Front Axle", value: 35 },
+//   { name: "Rear Axle", value: 45 },
+//   { name: "Trailer", value: 20 },
+// ];
 
-const COLORS = ['#ff6b35', '#ff8c5a', '#ffad7f'];
+// const COLORS = ['#ff6b35', '#ff8c5a', '#ffad7f'];
 
-const wimStations = [
-  { id: "WIM-001", location: "Highway A1 North - Km 25", status: "online", vehicles: 1245, violations: 42, lastReading: "15 sec ago", accuracy: 98.5 },
-  { id: "WIM-002", location: "Highway A1 South - Km 30", status: "online", vehicles: 1089, violations: 38, lastReading: "8 sec ago", accuracy: 99.2 },
-  { id: "WIM-003", location: "Industrial Zone - Route 15", status: "calibration", vehicles: 0, violations: 0, lastReading: "2 hours ago", accuracy: 0 },
-  { id: "WIM-004", location: "Port Access Road - Gate 3", status: "online", vehicles: 892, violations: 28, lastReading: "22 sec ago", accuracy: 97.8 },
-  { id: "WIM-005", location: "Border Checkpoint - North", status: "offline", vehicles: 0, violations: 0, lastReading: "5 hours ago", accuracy: 0 },
-];
+// const wimStations = [
+//   { id: "WIM-001", location: "Highway A1 North - Km 25", status: "online", vehicles: 1245, violations: 42, lastReading: "15 sec ago", accuracy: 98.5 },
+//   { id: "WIM-002", location: "Highway A1 South - Km 30", status: "online", vehicles: 1089, violations: 38, lastReading: "8 sec ago", accuracy: 99.2 },
+//   { id: "WIM-003", location: "Industrial Zone - Route 15", status: "calibration", vehicles: 0, violations: 0, lastReading: "2 hours ago", accuracy: 0 },
+//   { id: "WIM-004", location: "Port Access Road - Gate 3", status: "online", vehicles: 892, violations: 28, lastReading: "22 sec ago", accuracy: 97.8 },
+//   { id: "WIM-005", location: "Border Checkpoint - North", status: "offline", vehicles: 0, violations: 0, lastReading: "5 hours ago", accuracy: 0 },
+// ];
 
-const recentViolations = [
-  { id: "V-2024-1547", vehicle: "ABC-1234", type: "Heavy Truck", weight: "45.2t", limit: "40.0t", excess: "5.2t", station: "WIM-001", time: "2 min ago", severity: "high" },
-  { id: "V-2024-1546", vehicle: "XYZ-5678", type: "Semi Trailer", weight: "42.8t", limit: "40.0t", excess: "2.8t", station: "WIM-002", time: "8 min ago", severity: "medium" },
-  { id: "V-2024-1545", vehicle: "DEF-9012", type: "Heavy Truck", weight: "48.5t", limit: "40.0t", excess: "8.5t", station: "WIM-004", time: "15 min ago", severity: "high" },
-  { id: "V-2024-1544", vehicle: "GHI-3456", type: "Truck", weight: "41.5t", limit: "40.0t", excess: "1.5t", station: "WIM-001", time: "32 min ago", severity: "low" },
-  { id: "V-2024-1543", vehicle: "JKL-7890", type: "Semi Trailer", weight: "43.2t", limit: "40.0t", excess: "3.2t", station: "WIM-002", time: "45 min ago", severity: "medium" },
-];
+// const recentViolations = [
+//   { id: "V-2024-1547", vehicle: "ABC-1234", type: "Heavy Truck", weight: "45.2t", limit: "40.0t", excess: "5.2t", station: "WIM-001", time: "2 min ago", severity: "high" },
+//   { id: "V-2024-1546", vehicle: "XYZ-5678", type: "Semi Trailer", weight: "42.8t", limit: "40.0t", excess: "2.8t", station: "WIM-002", time: "8 min ago", severity: "medium" },
+//   { id: "V-2024-1545", vehicle: "DEF-9012", type: "Heavy Truck", weight: "48.5t", limit: "40.0t", excess: "8.5t", station: "WIM-004", time: "15 min ago", severity: "high" },
+//   { id: "V-2024-1544", vehicle: "GHI-3456", type: "Truck", weight: "41.5t", limit: "40.0t", excess: "1.5t", station: "WIM-001", time: "32 min ago", severity: "low" },
+//   { id: "V-2024-1543", vehicle: "JKL-7890", type: "Semi Trailer", weight: "43.2t", limit: "40.0t", excess: "3.2t", station: "WIM-002", time: "45 min ago", severity: "medium" },
+// ];
 
-const recentReadings = [
-  { time: "14:23:45", vehicle: "MNO-2468", type: "Truck", weight: "35.2t", axles: 4, speed: "68 km/h", status: "compliant", station: "WIM-001" },
-  { time: "14:23:38", vehicle: "PQR-1357", type: "Semi Trailer", weight: "38.5t", axles: 5, speed: "72 km/h", status: "compliant", station: "WIM-002" },
-  { time: "14:23:22", vehicle: "STU-9753", type: "Heavy Truck", weight: "45.2t", axles: 6, speed: "65 km/h", status: "violation", station: "WIM-001" },
-  { time: "14:23:15", vehicle: "VWX-8642", type: "Truck", weight: "32.8t", axles: 4, speed: "70 km/h", status: "compliant", station: "WIM-004" },
-  { time: "14:23:08", vehicle: "YZA-3691", type: "Light Truck", weight: "18.5t", axles: 3, speed: "75 km/h", status: "compliant", station: "WIM-002" },
-];
+// const recentReadings = [
+//   { time: "14:23:45", vehicle: "MNO-2468", type: "Truck", weight: "35.2t", axles: 4, speed: "68 km/h", status: "compliant", station: "WIM-001" },
+//   { time: "14:23:38", vehicle: "PQR-1357", type: "Semi Trailer", weight: "38.5t", axles: 5, speed: "72 km/h", status: "compliant", station: "WIM-002" },
+//   { time: "14:23:22", vehicle: "STU-9753", type: "Heavy Truck", weight: "45.2t", axles: 6, speed: "65 km/h", status: "violation", station: "WIM-001" },
+//   { time: "14:23:15", vehicle: "VWX-8642", type: "Truck", weight: "32.8t", axles: 4, speed: "70 km/h", status: "compliant", station: "WIM-004" },
+//   { time: "14:23:08", vehicle: "YZA-3691", type: "Light Truck", weight: "18.5t", axles: 3, speed: "75 km/h", status: "compliant", station: "WIM-002" },
+// ];
 
 export function WIMDashboard() {
+  const { t } = useTranslation();
   return (
     <div className="space-y-6">
       <div>
-        <h2 className="text-2xl font-bold text-foreground mb-2">Weight-in-Motion System</h2>
-        <p className="text-muted-foreground">Monitor vehicle weights and enforce load limits across the road network</p>
+        <h2 className="text-2xl font-bold text-foreground mb-2">{t("weight_in_motion_system")}</h2>
+        <p className="text-muted-foreground">{t("subheader_monitor_vehicle")}</p>
       </div>
 
       {/* WIM Stats */}
       <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6">
         <StatCard
-          title="Total Stations"
+          title={t("avg_vehicle_weight")}
           value="18"
           change="+2 new stations"
           changeType="positive"
           icon={Scale}
         />
         <StatCard
-          title="Vehicles Today"
+          title={t("vehicles_today")}
           value="3,226"
           change="+18% from yesterday"
           changeType="positive"
           icon={Truck}
         />
         <StatCard
-          title="Violations Detected"
+          title={t("violations_detected")}
           value="108"
           change="3.3% violation rate"
           changeType="negative"
           icon={AlertTriangle}
         />
         <StatCard
-          title="System Accuracy"
+          title={t("avg_vehicle_speed")}
           value="98.5%"
           change="Within spec range"
           changeType="positive"
@@ -97,7 +113,7 @@ export function WIMDashboard() {
       </div>
 
       {/* Live Station Status */}
-      <Card>
+      {/* <Card>
         <CardHeader className="flex flex-row items-center justify-between">
           <CardTitle>Live Station Status</CardTitle>
           <div className="flex space-x-2">
@@ -152,13 +168,13 @@ export function WIMDashboard() {
             ))}
           </div>
         </CardContent>
-      </Card>
+      </Card> */}
 
       <div className="grid grid-cols-1 lg:grid-cols-2 gap-6">
         {/* Weight Distribution */}
         <Card>
           <CardHeader>
-            <CardTitle>Weight Distribution (Today)</CardTitle>
+            <CardTitle>{t("weight_distribution")}</CardTitle>
           </CardHeader>
           <CardContent>
             <ResponsiveContainer width="100%" height={300}>
@@ -167,7 +183,7 @@ export function WIMDashboard() {
                 <XAxis dataKey="range" />
                 <YAxis />
                 <Tooltip />
-                <Bar dataKey="count" fill="#ff6b35" />
+                <Bar dataKey="count" fill="#048018" />
               </BarChart>
             </ResponsiveContainer>
           </CardContent>
@@ -176,7 +192,7 @@ export function WIMDashboard() {
         {/* Hourly Traffic & Violations */}
         <Card>
           <CardHeader>
-            <CardTitle>Traffic & Violations (24h)</CardTitle>
+            <CardTitle>{t("traffic_violations")}</CardTitle>
           </CardHeader>
           <CardContent>
             <ResponsiveContainer width="100%" height={300}>
@@ -185,17 +201,29 @@ export function WIMDashboard() {
                 <XAxis dataKey="time" />
                 <YAxis />
                 <Tooltip />
-                <Line type="monotone" dataKey="vehicles" stroke="#ff6b35" strokeWidth={2} name="Vehicles" />
-                <Line type="monotone" dataKey="violations" stroke="#d4183d" strokeWidth={2} name="Violations" />
+                <Line
+                  type="monotone"
+                  dataKey="vehicles"
+                  stroke="#048018"
+                  strokeWidth={2}
+                  name="Vehicles"
+                />
+                <Line
+                  type="monotone"
+                  dataKey="violations"
+                  stroke="#d4183d"
+                  strokeWidth={2}
+                  name="Violations"
+                />
               </LineChart>
             </ResponsiveContainer>
           </CardContent>
         </Card>
       </div>
 
-      <div className="grid grid-cols-1 lg:grid-cols-3 gap-6">
-        {/* Axle Load Distribution */}
-        <Card>
+      {/* <div className="grid grid-cols-1 lg:grid-cols-3 gap-6"> */}
+      {/* Axle Load Distribution */}
+      {/* <Card>
           <CardHeader>
             <CardTitle>Axle Load Distribution</CardTitle>
           </CardHeader>
@@ -220,10 +248,10 @@ export function WIMDashboard() {
               </PieChart>
             </ResponsiveContainer>
           </CardContent>
-        </Card>
+        </Card> */}
 
-        {/* System Health */}
-        <Card className="lg:col-span-2">
+      {/* System Health */}
+      {/* <Card className="lg:col-span-2">
           <CardHeader>
             <CardTitle>System Health Overview</CardTitle>
           </CardHeader>
@@ -273,16 +301,17 @@ export function WIMDashboard() {
               </div>
             </div>
           </CardContent>
-        </Card>
-      </div>
+        </Card> */}
+      {/* </div> */}
 
       {/* Recent Violations */}
       <Card>
         <CardHeader>
-          <CardTitle>Recent Weight Violations</CardTitle>
+          <CardTitle>{t("recent_weight_violations")}</CardTitle>
         </CardHeader>
         <CardContent>
-          <CustomerTable />
+          <ViolatedTable />
+          {/* <CustomerTable /> */}
           {/* <Table>
             <TableHeader>
               <TableRow>
@@ -331,19 +360,28 @@ export function WIMDashboard() {
       {/* Recent Readings */}
       <Card>
         <CardHeader>
-          <CardTitle>Recent Weight Readings</CardTitle>
+          <div className="flex justify-between">
+            <CardTitle>Recent Weight Readings</CardTitle>
+            <div>
+              <Button size="sm" className="hidden sm:flex" startIcon="pi-folder-open">
+                Download Report
+              </Button>
+            </div>
+          </div>
         </CardHeader>
         <CardContent>
-          <Table>
+          <CurrentMeasureTable />
+          {/* <Table>
             <TableHeader>
               <TableRow>
                 <TableHead>Time</TableHead>
                 <TableHead>Vehicle</TableHead>
+                <TableHead>Country Code</TableHead>
                 <TableHead>Type</TableHead>
                 <TableHead>Weight</TableHead>
-                <TableHead>Axles</TableHead>
                 <TableHead>Speed</TableHead>
-                <TableHead>Station</TableHead>
+                <TableHead>Width</TableHead>
+                <TableHead>Length</TableHead>
                 <TableHead>Status</TableHead>
               </TableRow>
             </TableHeader>
@@ -378,12 +416,12 @@ export function WIMDashboard() {
                 </TableRow>
               ))}
             </TableBody>
-          </Table>
+          </Table> */}
         </CardContent>
       </Card>
 
       {/* Activity Feed */}
-      <Card>
+      {/* <Card>
         <CardHeader>
           <CardTitle>Recent System Activity</CardTitle>
         </CardHeader>
@@ -430,7 +468,7 @@ export function WIMDashboard() {
             </div>
           </div>
         </CardContent>
-      </Card>
+      </Card> */}
     </div>
   );
 }

@@ -8,7 +8,18 @@ import { Input } from "./ui/input";
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "./ui/select";
 import { Avatar, AvatarFallback, AvatarImage } from "./ui/avatar";
 import { Table, TableBody, TableCell, TableHead, TableHeader, TableRow } from "./ui/table";
-import { BarChart, Bar, XAxis, YAxis, CartesianGrid, Tooltip, ResponsiveContainer, PieChart, Pie, Cell } from "recharts";
+import {
+  BarChart,
+  Bar,
+  XAxis,
+  YAxis,
+  CartesianGrid,
+  Tooltip,
+  ResponsiveContainer,
+  PieChart,
+  Pie,
+  Cell,
+} from "recharts";
 
 const userRoleData = [
   { name: "Admin", value: 8, color: "#38a3a5" },
@@ -28,14 +39,78 @@ const userActivityData = [
 ];
 
 const users = [
-  { id: 1, name: "John Smith", email: "john.smith@eva.com", role: "Admin", status: "active", lastLogin: "2 hours ago", avatar: "" },
-  { id: 2, name: "Sarah Johnson", email: "sarah.j@eva.com", role: "Operator", status: "active", lastLogin: "1 day ago", avatar: "" },
-  { id: 3, name: "Mike Chen", email: "mike.chen@eva.com", role: "Operator", status: "inactive", lastLogin: "1 week ago", avatar: "" },
-  { id: 4, name: "Emma Davis", email: "emma.davis@eva.com", role: "Viewer", status: "active", lastLogin: "3 hours ago", avatar: "" },
-  { id: 5, name: "Robert Wilson", email: "robert.w@eva.com", role: "Admin", status: "active", lastLogin: "30 minutes ago", avatar: "" },
-  { id: 6, name: "Lisa Brown", email: "lisa.brown@eva.com", role: "Viewer", status: "pending", lastLogin: "Never", avatar: "" },
-  { id: 7, name: "David Miller", email: "david.m@eva.com", role: "Operator", status: "active", lastLogin: "5 hours ago", avatar: "" },
-  { id: 8, name: "Anna Garcia", email: "anna.garcia@eva.com", role: "Guest", status: "inactive", lastLogin: "2 weeks ago", avatar: "" },
+  {
+    id: 1,
+    name: "John Smith",
+    email: "john.smith@eva.com",
+    role: "Admin",
+    status: "active",
+    lastLogin: "2 hours ago",
+    avatar: "",
+  },
+  {
+    id: 2,
+    name: "Sarah Johnson",
+    email: "sarah.j@eva.com",
+    role: "Operator",
+    status: "active",
+    lastLogin: "1 day ago",
+    avatar: "",
+  },
+  {
+    id: 3,
+    name: "Mike Chen",
+    email: "mike.chen@eva.com",
+    role: "Operator",
+    status: "inactive",
+    lastLogin: "1 week ago",
+    avatar: "",
+  },
+  {
+    id: 4,
+    name: "Emma Davis",
+    email: "emma.davis@eva.com",
+    role: "Viewer",
+    status: "active",
+    lastLogin: "3 hours ago",
+    avatar: "",
+  },
+  {
+    id: 5,
+    name: "Robert Wilson",
+    email: "robert.w@eva.com",
+    role: "Admin",
+    status: "active",
+    lastLogin: "30 minutes ago",
+    avatar: "",
+  },
+  {
+    id: 6,
+    name: "Lisa Brown",
+    email: "lisa.brown@eva.com",
+    role: "Viewer",
+    status: "pending",
+    lastLogin: "Never",
+    avatar: "",
+  },
+  {
+    id: 7,
+    name: "David Miller",
+    email: "david.m@eva.com",
+    role: "Operator",
+    status: "active",
+    lastLogin: "5 hours ago",
+    avatar: "",
+  },
+  {
+    id: 8,
+    name: "Anna Garcia",
+    email: "anna.garcia@eva.com",
+    role: "Guest",
+    status: "inactive",
+    lastLogin: "2 weeks ago",
+    avatar: "",
+  },
 ];
 
 export function UserDashboard() {
@@ -43,31 +118,41 @@ export function UserDashboard() {
   const [filterRole, setFilterRole] = useState("all");
   const [filterStatus, setFilterStatus] = useState("all");
 
-  const filteredUsers = users.filter(user => {
-    const matchesSearch = user.name.toLowerCase().includes(searchTerm.toLowerCase()) ||
-                         user.email.toLowerCase().includes(searchTerm.toLowerCase());
+  const filteredUsers = users.filter((user) => {
+    const matchesSearch =
+      user.name.toLowerCase().includes(searchTerm.toLowerCase()) ||
+      user.email.toLowerCase().includes(searchTerm.toLowerCase());
     const matchesRole = filterRole === "all" || user.role.toLowerCase() === filterRole;
     const matchesStatus = filterStatus === "all" || user.status === filterStatus;
-    
+
     return matchesSearch && matchesRole && matchesStatus;
   });
 
   const getStatusColor = (status: string) => {
     switch (status) {
-      case "active": return "default";
-      case "inactive": return "secondary";
-      case "pending": return "outline";
-      default: return "secondary";
+      case "active":
+        return "default";
+      case "inactive":
+        return "secondary";
+      case "pending":
+        return "outline";
+      default:
+        return "secondary";
     }
   };
 
   const getRoleColor = (role: string) => {
     switch (role) {
-      case "Admin": return "destructive";
-      case "Operator": return "default";
-      case "Viewer": return "secondary";
-      case "Guest": return "outline";
-      default: return "secondary";
+      case "Admin":
+        return "destructive";
+      case "Operator":
+        return "default";
+      case "Viewer":
+        return "secondary";
+      case "Guest":
+        return "outline";
+      default:
+        return "secondary";
     }
   };
 
@@ -242,7 +327,10 @@ export function UserDashboard() {
                         <Avatar className="h-8 w-8">
                           <AvatarImage src={user.avatar} />
                           <AvatarFallback className="bg-primary text-white text-sm">
-                            {user.name.split(' ').map(n => n[0]).join('')}
+                            {user.name
+                              .split(" ")
+                              .map((n) => n[0])
+                              .join("")}
                           </AvatarFallback>
                         </Avatar>
                         <div>
@@ -252,22 +340,22 @@ export function UserDashboard() {
                       </div>
                     </TableCell>
                     <TableCell>
-                      <Badge variant={getRoleColor(user.role)}>
-                        {user.role}
-                      </Badge>
+                      <Badge variant={getRoleColor(user.role)}>{user.role}</Badge>
                     </TableCell>
                     <TableCell>
-                      <Badge variant={getStatusColor(user.status)}>
-                        {user.status}
-                      </Badge>
+                      <Badge variant={getStatusColor(user.status)}>{user.status}</Badge>
                     </TableCell>
                     <TableCell className="text-sm text-muted-foreground">
                       {user.lastLogin}
                     </TableCell>
                     <TableCell>
                       <div className="flex gap-2">
-                        <Button variant="ghost" size="sm">Edit</Button>
-                        <Button variant="ghost" size="sm" className="text-destructive">Delete</Button>
+                        <Button variant="ghost" size="sm">
+                          Edit
+                        </Button>
+                        <Button variant="ghost" size="sm" className="text-destructive">
+                          Delete
+                        </Button>
                       </div>
                     </TableCell>
                   </TableRow>
@@ -296,9 +384,11 @@ export function UserDashboard() {
                 <p className="text-sm font-medium">John Smith logged in</p>
                 <p className="text-xs text-muted-foreground">2 hours ago</p>
               </div>
-              <Badge variant="outline" className="border-green-300 text-green-700">Login</Badge>
+              <Badge variant="outline" className="border-green-300 text-green-700">
+                Login
+              </Badge>
             </div>
-            
+
             <div className="flex items-center gap-3 p-3 border rounded-lg">
               <Avatar className="h-8 w-8">
                 <AvatarFallback className="bg-blue-100 text-blue-600">LB</AvatarFallback>
@@ -307,9 +397,11 @@ export function UserDashboard() {
                 <p className="text-sm font-medium">Lisa Brown account created</p>
                 <p className="text-xs text-muted-foreground">1 day ago</p>
               </div>
-              <Badge variant="outline" className="border-blue-300 text-blue-700">Created</Badge>
+              <Badge variant="outline" className="border-blue-300 text-blue-700">
+                Created
+              </Badge>
             </div>
-            
+
             <div className="flex items-center gap-3 p-3 border rounded-lg">
               <Avatar className="h-8 w-8">
                 <AvatarFallback className="bg-yellow-100 text-yellow-600">MC</AvatarFallback>
@@ -318,7 +410,9 @@ export function UserDashboard() {
                 <p className="text-sm font-medium">Mike Chen role updated to Operator</p>
                 <p className="text-xs text-muted-foreground">2 days ago</p>
               </div>
-              <Badge variant="outline" className="border-yellow-300 text-yellow-700">Updated</Badge>
+              <Badge variant="outline" className="border-yellow-300 text-yellow-700">
+                Updated
+              </Badge>
             </div>
           </div>
         </CardContent>

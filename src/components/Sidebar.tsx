@@ -1,4 +1,17 @@
-import { Monitor, Navigation, Gauge, BarChart3, Settings, Shield, Cloud, Radar, Users, FolderOpen, ChevronLeft, ChevronRight, Scale } from "lucide-react";
+import {
+  Monitor,
+  Navigation,
+  Gauge,
+  BarChart3,
+  Settings,
+  Cloud,
+  Users,
+  FolderOpen,
+  ChevronLeft,
+  ChevronRight,
+  Scale,
+} from "lucide-react";
+// Shield, Radar
 import { Button } from "./ui/button";
 import { cn } from "./ui/utils";
 import { Tooltip, TooltipContent, TooltipProvider, TooltipTrigger } from "./ui/tooltip";
@@ -13,16 +26,22 @@ interface SidebarProps {
   onMobileClose: () => void;
 }
 
-export function Sidebar({ 
-  activeTab, 
-  onTabChange, 
-  collapsed, 
-  isMobile, 
-  mobileOpen, 
+interface MenuItem {
+  id: string;
+  label: string;
+  icon: React.ComponentType<React.SVGProps<SVGSVGElement>>;
+}
+
+export function Sidebar({
+  activeTab,
+  onTabChange,
+  collapsed,
+  isMobile,
+  mobileOpen,
   onCollapse,
-  onMobileClose 
+  // onMobileClose
 }: SidebarProps) {
-  const menuItems = [
+  const menuItems: MenuItem[] = [
     { id: "overview", label: "Overview", icon: BarChart3 },
     { id: "vms", label: "VMS", icon: Monitor },
     { id: "lms", label: "LMS", icon: Navigation },
@@ -39,19 +58,18 @@ export function Sidebar({
 
   const sidebarClasses = cn(
     "bg-sidebar h-full border-r border-sidebar-border transition-all duration-300 flex flex-col",
-    isMobile ? [
-      "fixed left-0 top-16 bottom-0 z-50 w-64",
-      mobileOpen ? "translate-x-0" : "-translate-x-full"
-    ] : [
-      "relative",
-      collapsed ? "w-16" : "w-64"
-    ]
+    isMobile
+      ? [
+          "fixed left-0 top-16 bottom-0 z-50 w-64",
+          mobileOpen ? "translate-x-0" : "-translate-x-full",
+        ]
+      : ["relative", collapsed ? "w-16" : "w-64"]
   );
 
-  const renderMenuItem = (item: any) => {
+  const renderMenuItem = (item: MenuItem) => {
     const Icon = item.icon;
     const isActive = activeTab === item.id;
-    
+
     const buttonContent = (
       <Button
         key={item.id}
@@ -74,9 +92,7 @@ export function Sidebar({
       return (
         <TooltipProvider key={item.id}>
           <Tooltip>
-            <TooltipTrigger asChild>
-              {buttonContent}
-            </TooltipTrigger>
+            <TooltipTrigger asChild>{buttonContent}</TooltipTrigger>
             <TooltipContent side="right" className="ml-2">
               {item.label}
             </TooltipContent>
@@ -91,8 +107,12 @@ export function Sidebar({
   return (
     <aside className={sidebarClasses}>
       {/* Header with collapse toggle */}
-      <div className={cn("flex items-center justify-between border-b border-sidebar-border", 
-        collapsed && !isMobile ? "p-2" : "p-4")}>
+      <div
+        className={cn(
+          "flex items-center justify-between border-b border-sidebar-border",
+          collapsed && !isMobile ? "p-2" : "p-4"
+        )}
+      >
         {(!collapsed || isMobile) && (
           <div className="flex items-center space-x-2">
             <div className="w-8 h-8 bg-sidebar-primary rounded-lg flex items-center justify-center">
@@ -115,9 +135,7 @@ export function Sidebar({
 
       {/* Navigation */}
       <div className={cn("flex-1 overflow-y-auto", collapsed && !isMobile ? "p-2" : "p-4")}>
-        <nav className="space-y-1">
-          {menuItems.map(renderMenuItem)}
-        </nav>
+        <nav className="space-y-1">{menuItems.map(renderMenuItem)}</nav>
       </div>
 
       {/* Footer for collapsed state */}

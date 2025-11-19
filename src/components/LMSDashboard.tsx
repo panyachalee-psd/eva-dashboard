@@ -1,11 +1,31 @@
-import { Navigation, Car, MapPin, AlertTriangle, TrendingUp, Clock, Route, TrafficCone } from "lucide-react";
+import {
+  Navigation,
+  Car,
+  MapPin,
+  AlertTriangle,
+  TrendingUp,
+  Clock,
+  Route,
+  TrafficCone,
+} from "lucide-react";
 import { StatCard } from "./StatCard";
 import { Card, CardContent, CardHeader, CardTitle } from "./ui/card";
 import { Button } from "./ui/button";
 import { Badge } from "./ui/badge";
 import { Progress } from "./ui/progress";
 import { Table, TableBody, TableCell, TableHead, TableHeader, TableRow } from "./ui/table";
-import { LineChart, Line, XAxis, YAxis, CartesianGrid, Tooltip, ResponsiveContainer, PieChart, Pie, Cell } from "recharts";
+import {
+  LineChart,
+  Line,
+  XAxis,
+  YAxis,
+  CartesianGrid,
+  Tooltip,
+  ResponsiveContainer,
+  PieChart,
+  Pie,
+  Cell,
+} from "recharts";
 
 const trafficFlowData = [
   { month: "Jan", vehicles: 12000, avgSpeed: 85 },
@@ -24,11 +44,56 @@ const laneStatusData = [
 ];
 
 const laneData = [
-  { id: "L001", name: "Highway A1 - North Bound", type: "Express", lanes: 4, status: "active", vehicles: 1450, avgSpeed: 85, incidents: 0 },
-  { id: "L002", name: "Highway A1 - South Bound", type: "Express", lanes: 4, status: "active", vehicles: 1680, avgSpeed: 82, incidents: 1 },
-  { id: "L003", name: "City Center - Main Street", type: "Urban", lanes: 3, status: "maintenance", vehicles: 890, avgSpeed: 45, incidents: 0 },
-  { id: "L004", name: "Industrial Zone - Route 15", type: "Arterial", lanes: 2, status: "active", vehicles: 650, avgSpeed: 75, incidents: 0 },
-  { id: "L005", name: "School Zone - Oak Avenue", type: "Local", lanes: 2, status: "restricted", vehicles: 320, avgSpeed: 30, incidents: 0 },
+  {
+    id: "L001",
+    name: "Highway A1 - North Bound",
+    type: "Express",
+    lanes: 4,
+    status: "active",
+    vehicles: 1450,
+    avgSpeed: 85,
+    incidents: 0,
+  },
+  {
+    id: "L002",
+    name: "Highway A1 - South Bound",
+    type: "Express",
+    lanes: 4,
+    status: "active",
+    vehicles: 1680,
+    avgSpeed: 82,
+    incidents: 1,
+  },
+  {
+    id: "L003",
+    name: "City Center - Main Street",
+    type: "Urban",
+    lanes: 3,
+    status: "maintenance",
+    vehicles: 890,
+    avgSpeed: 45,
+    incidents: 0,
+  },
+  {
+    id: "L004",
+    name: "Industrial Zone - Route 15",
+    type: "Arterial",
+    lanes: 2,
+    status: "active",
+    vehicles: 650,
+    avgSpeed: 75,
+    incidents: 0,
+  },
+  {
+    id: "L005",
+    name: "School Zone - Oak Avenue",
+    type: "Local",
+    lanes: 2,
+    status: "restricted",
+    vehicles: 320,
+    avgSpeed: 30,
+    incidents: 0,
+  },
 ];
 
 export function LMSDashboard() {
@@ -36,7 +101,9 @@ export function LMSDashboard() {
     <div className="space-y-6">
       <div>
         <h2 className="text-2xl font-bold text-foreground mb-2">Lane Management System</h2>
-        <p className="text-muted-foreground">Monitor and control traffic lanes and road infrastructure</p>
+        <p className="text-muted-foreground">
+          Monitor and control traffic lanes and road infrastructure
+        </p>
       </div>
 
       {/* LMS Stats */}
@@ -85,8 +152,22 @@ export function LMSDashboard() {
                 <YAxis yAxisId="left" />
                 <YAxis yAxisId="right" orientation="right" />
                 <Tooltip />
-                <Line yAxisId="left" type="monotone" dataKey="vehicles" stroke="#80ed99" strokeWidth={2} name="Vehicles (thousands)" />
-                <Line yAxisId="right" type="monotone" dataKey="avgSpeed" stroke="#57cc99" strokeWidth={2} name="Avg Speed (km/h)" />
+                <Line
+                  yAxisId="left"
+                  type="monotone"
+                  dataKey="vehicles"
+                  stroke="#80ed99"
+                  strokeWidth={2}
+                  name="Vehicles (thousands)"
+                />
+                <Line
+                  yAxisId="right"
+                  type="monotone"
+                  dataKey="avgSpeed"
+                  stroke="#57cc99"
+                  strokeWidth={2}
+                  name="Avg Speed (km/h)"
+                />
               </LineChart>
             </ResponsiveContainer>
           </CardContent>
@@ -175,23 +256,31 @@ export function LMSDashboard() {
                   <TableCell>
                     <Badge
                       variant={
-                        lane.status === 'active' ? 'default' :
-                        lane.status === 'maintenance' ? 'secondary' : 
-                        lane.status === 'restricted' ? 'outline' : 'destructive'
+                        lane.status === "active"
+                          ? "default"
+                          : lane.status === "maintenance"
+                            ? "secondary"
+                            : lane.status === "restricted"
+                              ? "outline"
+                              : "destructive"
                       }
                     >
                       {lane.status}
                     </Badge>
                     {lane.incidents > 0 && (
                       <Badge variant="destructive" className="ml-1">
-                        {lane.incidents} incident{lane.incidents > 1 ? 's' : ''}
+                        {lane.incidents} incident{lane.incidents > 1 ? "s" : ""}
                       </Badge>
                     )}
                   </TableCell>
                   <TableCell>
                     <div className="flex space-x-1">
-                      <Button variant="ghost" size="sm">Control</Button>
-                      <Button variant="ghost" size="sm">Monitor</Button>
+                      <Button variant="ghost" size="sm">
+                        Control
+                      </Button>
+                      <Button variant="ghost" size="sm">
+                        Monitor
+                      </Button>
                     </div>
                   </TableCell>
                 </TableRow>
@@ -215,47 +304,57 @@ export function LMSDashboard() {
                 </div>
                 <div className="flex-1">
                   <p className="font-medium">Lane reopened after maintenance</p>
-                  <p className="text-sm text-muted-foreground">Highway A1 North - Lane 3 • 45 minutes ago</p>
+                  <p className="text-sm text-muted-foreground">
+                    Highway A1 North - Lane 3 • 45 minutes ago
+                  </p>
                 </div>
               </div>
-              
+
               <div className="flex items-center space-x-3 p-3 rounded-lg bg-muted/50">
                 <div className="w-10 h-10 bg-yellow-500 rounded-full flex items-center justify-center">
                   <TrafficCone className="w-5 h-5 text-white" />
                 </div>
                 <div className="flex-1">
                   <p className="font-medium">Traffic diversion activated</p>
-                  <p className="text-sm text-muted-foreground">Main Street construction zone • 2 hours ago</p>
+                  <p className="text-sm text-muted-foreground">
+                    Main Street construction zone • 2 hours ago
+                  </p>
                 </div>
               </div>
-              
+
               <div className="flex items-center space-x-3 p-3 rounded-lg bg-muted/50">
                 <div className="w-10 h-10 bg-blue-500 rounded-full flex items-center justify-center">
                   <Car className="w-5 h-5 text-white" />
                 </div>
                 <div className="flex-1">
                   <p className="font-medium">Peak traffic detected</p>
-                  <p className="text-sm text-muted-foreground">Industrial Zone - Route 15 • 3 hours ago</p>
+                  <p className="text-sm text-muted-foreground">
+                    Industrial Zone - Route 15 • 3 hours ago
+                  </p>
                 </div>
               </div>
-              
+
               <div className="flex items-center space-x-3 p-3 rounded-lg bg-muted/50">
                 <div className="w-10 h-10 bg-red-500 rounded-full flex items-center justify-center">
                   <AlertTriangle className="w-5 h-5 text-white" />
                 </div>
                 <div className="flex-1">
                   <p className="font-medium">Incident reported</p>
-                  <p className="text-sm text-muted-foreground">Highway A1 South - Minor collision cleared • 4 hours ago</p>
+                  <p className="text-sm text-muted-foreground">
+                    Highway A1 South - Minor collision cleared • 4 hours ago
+                  </p>
                 </div>
               </div>
-              
+
               <div className="flex items-center space-x-3 p-3 rounded-lg bg-muted/50">
                 <div className="w-10 h-10 bg-primary rounded-full flex items-center justify-center">
                   <MapPin className="w-5 h-5 text-white" />
                 </div>
                 <div className="flex-1">
                   <p className="font-medium">Speed limit updated</p>
-                  <p className="text-sm text-muted-foreground">School Zone - Oak Avenue reduced to 30 km/h • 6 hours ago</p>
+                  <p className="text-sm text-muted-foreground">
+                    School Zone - Oak Avenue reduced to 30 km/h • 6 hours ago
+                  </p>
                 </div>
               </div>
             </div>

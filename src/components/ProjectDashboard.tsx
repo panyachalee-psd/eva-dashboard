@@ -1,13 +1,35 @@
 import { useState } from "react";
-import { FolderOpen, Plus, Calendar, Clock, Users, CheckCircle, AlertCircle, XCircle } from "lucide-react";
+import {
+  FolderOpen,
+  Plus,
+  Calendar,
+  Clock,
+  Users,
+  CheckCircle,
+  AlertCircle,
+  XCircle,
+} from "lucide-react";
 import { Card, CardContent, CardHeader, CardTitle } from "./ui/card";
 import { StatCard } from "./StatCard";
 import { Button } from "./ui/button";
 import { Badge } from "./ui/badge";
 import { Progress } from "./ui/progress";
-import { Avatar, AvatarFallback, AvatarImage } from "./ui/avatar";
+import { Avatar, AvatarFallback } from "./ui/avatar";
+// AvatarImage
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "./ui/tabs";
-import { BarChart, Bar, XAxis, YAxis, CartesianGrid, Tooltip, ResponsiveContainer, PieChart, Pie, Cell, LineChart, Line } from "recharts";
+import {
+  BarChart,
+  Bar,
+  XAxis,
+  YAxis,
+  CartesianGrid,
+  Tooltip,
+  ResponsiveContainer,
+  PieChart,
+  Pie,
+  Cell,
+} from "recharts";
+// LineChart, Line
 
 const projectStatusData = [
   { name: "Active", value: 12, color: "#ff6b35" },
@@ -37,7 +59,7 @@ const projects = [
     team: ["JS", "SJ", "MC"],
     priority: "high",
     budget: "$125,000",
-    spent: "$93,750"
+    spent: "$93,750",
   },
   {
     id: 2,
@@ -50,7 +72,7 @@ const projects = [
     team: ["ED", "RW", "LB"],
     priority: "medium",
     budget: "$85,000",
-    spent: "$38,250"
+    spent: "$38,250",
   },
   {
     id: 3,
@@ -63,7 +85,7 @@ const projects = [
     team: ["DM", "AG"],
     priority: "high",
     budget: "$95,000",
-    spent: "$95,000"
+    spent: "$95,000",
   },
   {
     id: 4,
@@ -76,7 +98,7 @@ const projects = [
     team: ["JS", "ED"],
     priority: "low",
     budget: "$65,000",
-    spent: "$6,500"
+    spent: "$6,500",
   },
   {
     id: 5,
@@ -89,47 +111,95 @@ const projects = [
     team: ["SJ", "MC", "RW"],
     priority: "medium",
     budget: "$110,000",
-    spent: "$33,000"
-  }
+    spent: "$33,000",
+  },
 ];
 
 const tasks = [
-  { id: 1, title: "Complete API integration testing", project: "VMS Integration Phase 2", due: "2024-06-15", status: "in-progress", assignee: "JS" },
-  { id: 2, title: "Deploy sensors to Building A", project: "IoT Sensor Network", due: "2024-06-20", status: "pending", assignee: "ED" },
-  { id: 3, title: "Review security protocols", project: "Security Dashboard Enhancement", due: "2024-06-18", status: "completed", assignee: "SJ" },
-  { id: 4, title: "Create mobile app wireframes", project: "LMS Mobile App", due: "2024-07-01", status: "pending", assignee: "ED" },
-  { id: 5, title: "Budget approval documentation", project: "IoT Sensor Network", due: "2024-06-12", status: "in-progress", assignee: "RW" },
+  {
+    id: 1,
+    title: "Complete API integration testing",
+    project: "VMS Integration Phase 2",
+    due: "2024-06-15",
+    status: "in-progress",
+    assignee: "JS",
+  },
+  {
+    id: 2,
+    title: "Deploy sensors to Building A",
+    project: "IoT Sensor Network",
+    due: "2024-06-20",
+    status: "pending",
+    assignee: "ED",
+  },
+  {
+    id: 3,
+    title: "Review security protocols",
+    project: "Security Dashboard Enhancement",
+    due: "2024-06-18",
+    status: "completed",
+    assignee: "SJ",
+  },
+  {
+    id: 4,
+    title: "Create mobile app wireframes",
+    project: "LMS Mobile App",
+    due: "2024-07-01",
+    status: "pending",
+    assignee: "ED",
+  },
+  {
+    id: 5,
+    title: "Budget approval documentation",
+    project: "IoT Sensor Network",
+    due: "2024-06-12",
+    status: "in-progress",
+    assignee: "RW",
+  },
 ];
 
 export function ProjectDashboard() {
   const [activeTab, setActiveTab] = useState("overview");
-  const [selectedProject, setSelectedProject] = useState<number | null>(null);
+  // const [selectedProject, setSelectedProject] = useState<number | null>(null);
 
   const getStatusColor = (status: string) => {
     switch (status) {
-      case "active": return "default";
-      case "completed": return "default";
-      case "on-hold": return "secondary";
-      case "planning": return "outline";
-      default: return "secondary";
+      case "active":
+        return "default";
+      case "completed":
+        return "default";
+      case "on-hold":
+        return "secondary";
+      case "planning":
+        return "outline";
+      default:
+        return "secondary";
     }
   };
 
   const getPriorityColor = (priority: string) => {
     switch (priority) {
-      case "high": return "destructive";
-      case "medium": return "secondary";
-      case "low": return "outline";
-      default: return "secondary";
+      case "high":
+        return "destructive";
+      case "medium":
+        return "secondary";
+      case "low":
+        return "outline";
+      default:
+        return "secondary";
     }
   };
 
   const getTaskStatusColor = (status: string) => {
     switch (status) {
-      case "completed": return "text-green-600";
-      case "in-progress": return "text-blue-600";
-      case "pending": return "text-yellow-600";
-      default: return "text-gray-600";
+      case "completed":
+        return "text-green-600";
+      case "in-progress":
+        return "text-blue-600";
+      case "pending":
+        return "text-yellow-600";
+      default:
+        return "text-gray-600";
     }
   };
 
@@ -257,15 +327,16 @@ export function ProjectDashboard() {
             <CardContent>
               <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
                 {projects.slice(0, 4).map((project) => (
-                  <div key={project.id} className="p-4 border rounded-lg hover:bg-muted/50 transition-colors">
+                  <div
+                    key={project.id}
+                    className="p-4 border rounded-lg hover:bg-muted/50 transition-colors"
+                  >
                     <div className="flex items-center justify-between mb-3">
                       <h4 className="font-medium">{project.name}</h4>
-                      <Badge variant={getStatusColor(project.status)}>
-                        {project.status}
-                      </Badge>
+                      <Badge variant={getStatusColor(project.status)}>{project.status}</Badge>
                     </div>
                     <p className="text-sm text-muted-foreground mb-3">{project.description}</p>
-                    
+
                     <div className="space-y-3">
                       <div>
                         <div className="flex justify-between text-sm mb-1">
@@ -274,7 +345,7 @@ export function ProjectDashboard() {
                         </div>
                         <Progress value={project.progress} className="h-2" />
                       </div>
-                      
+
                       <div className="flex items-center justify-between text-sm">
                         <span className="text-muted-foreground">Team:</span>
                         <div className="flex -space-x-2">
@@ -287,7 +358,7 @@ export function ProjectDashboard() {
                           ))}
                         </div>
                       </div>
-                      
+
                       <div className="flex items-center justify-between text-sm">
                         <span className="text-muted-foreground">Priority:</span>
                         <Badge variant={getPriorityColor(project.priority)} className="text-xs">
@@ -313,26 +384,31 @@ export function ProjectDashboard() {
             <CardContent>
               <div className="space-y-4">
                 {projects.map((project) => (
-                  <div key={project.id} className="p-4 border rounded-lg hover:bg-muted/50 transition-colors">
+                  <div
+                    key={project.id}
+                    className="p-4 border rounded-lg hover:bg-muted/50 transition-colors"
+                  >
                     <div className="grid grid-cols-1 lg:grid-cols-3 gap-4">
                       <div className="lg:col-span-2">
                         <div className="flex items-center gap-2 mb-2">
                           <h4 className="font-medium">{project.name}</h4>
-                          <Badge variant={getStatusColor(project.status)}>
-                            {project.status}
-                          </Badge>
+                          <Badge variant={getStatusColor(project.status)}>{project.status}</Badge>
                           <Badge variant={getPriorityColor(project.priority)} className="text-xs">
                             {project.priority}
                           </Badge>
                         </div>
                         <p className="text-sm text-muted-foreground mb-3">{project.description}</p>
-                        
+
                         <div className="flex items-center gap-4 text-sm text-muted-foreground">
-                          <span>📅 {project.startDate} - {project.endDate}</span>
-                          <span>💰 {project.spent} / {project.budget}</span>
+                          <span>
+                            📅 {project.startDate} - {project.endDate}
+                          </span>
+                          <span>
+                            💰 {project.spent} / {project.budget}
+                          </span>
                         </div>
                       </div>
-                      
+
                       <div className="space-y-3">
                         <div>
                           <div className="flex justify-between text-sm mb-1">
@@ -341,7 +417,7 @@ export function ProjectDashboard() {
                           </div>
                           <Progress value={project.progress} className="h-2" />
                         </div>
-                        
+
                         <div className="flex items-center justify-between">
                           <span className="text-sm text-muted-foreground">Team:</span>
                           <div className="flex -space-x-2">
@@ -374,20 +450,27 @@ export function ProjectDashboard() {
             <CardContent>
               <div className="space-y-4">
                 {tasks.map((task) => (
-                  <div key={task.id} className="flex items-center gap-4 p-3 border rounded-lg hover:bg-muted/50 transition-colors">
+                  <div
+                    key={task.id}
+                    className="flex items-center gap-4 p-3 border rounded-lg hover:bg-muted/50 transition-colors"
+                  >
                     <div className="flex-1">
                       <h5 className="font-medium">{task.title}</h5>
                       <p className="text-sm text-muted-foreground">{task.project}</p>
                     </div>
-                    
+
                     <div className="text-right">
                       <p className="text-sm text-muted-foreground">Due: {task.due}</p>
                       <p className="text-sm text-muted-foreground">Assignee: {task.assignee}</p>
                     </div>
-                    
+
                     <div className="flex items-center gap-2">
-                      {task.status === "completed" && <CheckCircle className="h-4 w-4 text-green-600" />}
-                      {task.status === "in-progress" && <AlertCircle className="h-4 w-4 text-blue-600" />}
+                      {task.status === "completed" && (
+                        <CheckCircle className="h-4 w-4 text-green-600" />
+                      )}
+                      {task.status === "in-progress" && (
+                        <AlertCircle className="h-4 w-4 text-blue-600" />
+                      )}
                       {task.status === "pending" && <XCircle className="h-4 w-4 text-yellow-600" />}
                       <span className={`text-sm ${getTaskStatusColor(task.status)}`}>
                         {task.status}

@@ -1,11 +1,25 @@
 import { useState } from "react";
-import { Radar, Target, AlertTriangle, Eye, Signal, Zap, Activity } from "lucide-react";
+import { Radar, Target, AlertTriangle, Signal, Zap, Activity } from "lucide-react";
+// Eye
 import { Card, CardContent, CardHeader, CardTitle } from "./ui/card";
 import { StatCard } from "./StatCard";
 import { Button } from "./ui/button";
 import { Badge } from "./ui/badge";
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "./ui/select";
-import { PieChart, Pie, Cell, ResponsiveContainer, LineChart, Line, XAxis, YAxis, CartesianGrid, Tooltip, BarChart, Bar } from "recharts";
+import {
+  PieChart,
+  Pie,
+  Cell,
+  ResponsiveContainer,
+  LineChart,
+  Line,
+  XAxis,
+  YAxis,
+  CartesianGrid,
+  Tooltip,
+  BarChart,
+  Bar,
+} from "recharts";
 
 const detectionData = [
   { name: "Vehicles", value: 156, color: "#ff6b35" },
@@ -24,10 +38,42 @@ const radarPerformance = [
 ];
 
 const radarStations = [
-  { id: "RD001", name: "Radar North", location: "Main Highway", status: "active", range: "500m", accuracy: 98.5, detections: 156 },
-  { id: "RD002", name: "Radar East", location: "Industrial Zone", status: "active", range: "750m", accuracy: 97.8, detections: 89 },
-  { id: "RD003", name: "Radar South", location: "City Center", status: "warning", range: "600m", accuracy: 95.2, detections: 203 },
-  { id: "RD004", name: "Radar West", location: "Residential", status: "maintenance", range: "400m", accuracy: 0, detections: 0 },
+  {
+    id: "RD001",
+    name: "Radar North",
+    location: "Main Highway",
+    status: "active",
+    range: "500m",
+    accuracy: 98.5,
+    detections: 156,
+  },
+  {
+    id: "RD002",
+    name: "Radar East",
+    location: "Industrial Zone",
+    status: "active",
+    range: "750m",
+    accuracy: 97.8,
+    detections: 89,
+  },
+  {
+    id: "RD003",
+    name: "Radar South",
+    location: "City Center",
+    status: "warning",
+    range: "600m",
+    accuracy: 95.2,
+    detections: 203,
+  },
+  {
+    id: "RD004",
+    name: "Radar West",
+    location: "Residential",
+    status: "maintenance",
+    range: "400m",
+    accuracy: 0,
+    detections: 0,
+  },
 ];
 
 const speedViolations = [
@@ -39,7 +85,7 @@ const speedViolations = [
 
 export function RadarDashboard() {
   const [selectedTimeRange, setSelectedTimeRange] = useState("24h");
-  const [selectedRadar, setSelectedRadar] = useState("all");
+  // const [selectedRadar, setSelectedRadar] = useState("all");
 
   return (
     <div className="space-y-6">
@@ -64,9 +110,7 @@ export function RadarDashboard() {
             <Target className="h-4 w-4 mr-2" />
             Calibrate
           </Button>
-          <Button size="sm">
-            Export Data
-          </Button>
+          <Button size="sm">Export Data</Button>
         </div>
       </div>
 
@@ -76,28 +120,32 @@ export function RadarDashboard() {
           title="Active Radars"
           value="3"
           change="0"
-          icon={<Radar className="h-5 w-5" />}
+          // icon={<Radar className="h-5 w-5" />}
+          icon={Radar}
           trend="neutral"
         />
         <StatCard
           title="Total Detections"
           value="241"
           change="+12%"
-          icon={<Target className="h-5 w-5" />}
+          // icon={<Target className="h-5 w-5" />}
+          icon={Target}
           trend="up"
         />
         <StatCard
           title="Average Accuracy"
           value="98.2%"
           change="+0.3%"
-          icon={<Signal className="h-5 w-5" />}
+          // icon={<Signal className="h-5 w-5" />}
+          icon={Signal}
           trend="up"
         />
         <StatCard
           title="Speed Violations"
           value="173"
           change="-8%"
-          icon={<Zap className="h-5 w-5" />}
+          // icon={<Zap className="h-5 w-5" />}
+          icon={Zap}
           trend="down"
         />
       </div>
@@ -149,8 +197,22 @@ export function RadarDashboard() {
                 <YAxis yAxisId="accuracy" orientation="left" domain={[95, 100]} />
                 <YAxis yAxisId="detections" orientation="right" />
                 <Tooltip />
-                <Line yAxisId="accuracy" type="monotone" dataKey="accuracy" stroke="#ff6b35" strokeWidth={2} name="Accuracy (%)" />
-                <Line yAxisId="detections" type="monotone" dataKey="detections" stroke="#60a5fa" strokeWidth={2} name="Detections" />
+                <Line
+                  yAxisId="accuracy"
+                  type="monotone"
+                  dataKey="accuracy"
+                  stroke="#ff6b35"
+                  strokeWidth={2}
+                  name="Accuracy (%)"
+                />
+                <Line
+                  yAxisId="detections"
+                  type="monotone"
+                  dataKey="detections"
+                  stroke="#60a5fa"
+                  strokeWidth={2}
+                  name="Detections"
+                />
               </LineChart>
             </ResponsiveContainer>
           </CardContent>
@@ -168,18 +230,26 @@ export function RadarDashboard() {
         <CardContent>
           <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
             {radarStations.map((station) => (
-              <div key={station.id} className="p-4 border rounded-lg hover:bg-muted/50 transition-colors">
+              <div
+                key={station.id}
+                className="p-4 border rounded-lg hover:bg-muted/50 transition-colors"
+              >
                 <div className="flex items-center justify-between mb-3">
                   <h4 className="font-medium">{station.name}</h4>
-                  <Badge variant={
-                    station.status === "active" ? "default" : 
-                    station.status === "warning" ? "secondary" : "destructive"
-                  }>
+                  <Badge
+                    variant={
+                      station.status === "active"
+                        ? "default"
+                        : station.status === "warning"
+                          ? "secondary"
+                          : "destructive"
+                    }
+                  >
                     {station.status}
                   </Badge>
                 </div>
                 <p className="text-sm text-muted-foreground mb-3">{station.location}</p>
-                
+
                 <div className="grid grid-cols-2 gap-4 text-sm">
                   <div>
                     <span className="text-muted-foreground">Range:</span>
@@ -244,7 +314,7 @@ export function RadarDashboard() {
                   Warning
                 </Badge>
               </div>
-              
+
               <div className="flex items-center justify-between p-3 border border-red-200 bg-red-50 rounded-lg">
                 <div>
                   <h5 className="font-medium text-red-800">Station Offline</h5>
@@ -254,7 +324,7 @@ export function RadarDashboard() {
                   Critical
                 </Badge>
               </div>
-              
+
               <div className="flex items-center justify-between p-3 border border-green-200 bg-green-50 rounded-lg">
                 <div>
                   <h5 className="font-medium text-green-800">System Update</h5>

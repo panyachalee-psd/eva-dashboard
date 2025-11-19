@@ -4,7 +4,17 @@ import { Card, CardContent, CardHeader, CardTitle } from "./ui/card";
 import { Button } from "./ui/button";
 import { Badge } from "./ui/badge";
 import { Table, TableBody, TableCell, TableHead, TableHeader, TableRow } from "./ui/table";
-import { AreaChart, Area, XAxis, YAxis, CartesianGrid, Tooltip, ResponsiveContainer, BarChart, Bar } from "recharts";
+import {
+  AreaChart,
+  Area,
+  XAxis,
+  YAxis,
+  CartesianGrid,
+  Tooltip,
+  ResponsiveContainer,
+  BarChart,
+  Bar,
+} from "recharts";
 
 const threatData = [
   { time: "00:00", threats: 2, blocked: 8 },
@@ -23,11 +33,46 @@ const accessData = [
 ];
 
 const securityEvents = [
-  { id: "SEC-001", type: "Unauthorized Access", location: "Server Room", severity: "high", time: "2 min ago", status: "investigating" },
-  { id: "SEC-002", type: "Failed Login Attempt", location: "Admin Panel", severity: "medium", time: "5 min ago", status: "blocked" },
-  { id: "SEC-003", type: "Suspicious Activity", location: "Parking Lot", severity: "low", time: "12 min ago", status: "monitoring" },
-  { id: "SEC-004", type: "Access Granted", location: "Main Entrance", severity: "info", time: "15 min ago", status: "completed" },
-  { id: "SEC-005", type: "System Alert", location: "Network", severity: "medium", time: "18 min ago", status: "resolved" },
+  {
+    id: "SEC-001",
+    type: "Unauthorized Access",
+    location: "Server Room",
+    severity: "high",
+    time: "2 min ago",
+    status: "investigating",
+  },
+  {
+    id: "SEC-002",
+    type: "Failed Login Attempt",
+    location: "Admin Panel",
+    severity: "medium",
+    time: "5 min ago",
+    status: "blocked",
+  },
+  {
+    id: "SEC-003",
+    type: "Suspicious Activity",
+    location: "Parking Lot",
+    severity: "low",
+    time: "12 min ago",
+    status: "monitoring",
+  },
+  {
+    id: "SEC-004",
+    type: "Access Granted",
+    location: "Main Entrance",
+    severity: "info",
+    time: "15 min ago",
+    status: "completed",
+  },
+  {
+    id: "SEC-005",
+    type: "System Alert",
+    location: "Network",
+    severity: "medium",
+    time: "18 min ago",
+    status: "resolved",
+  },
 ];
 
 export function SecurityDashboard() {
@@ -35,7 +80,9 @@ export function SecurityDashboard() {
     <div className="space-y-6">
       <div>
         <h2 className="text-2xl font-bold text-foreground mb-2">Security Dashboard</h2>
-        <p className="text-muted-foreground">Monitor security threats and access control across all systems</p>
+        <p className="text-muted-foreground">
+          Monitor security threats and access control across all systems
+        </p>
       </div>
 
       {/* Security Stats */}
@@ -83,8 +130,22 @@ export function SecurityDashboard() {
                 <XAxis dataKey="time" />
                 <YAxis />
                 <Tooltip />
-                <Area type="monotone" dataKey="threats" stackId="1" stroke="#ff6b35" fill="#ff6b35" fillOpacity={0.6} />
-                <Area type="monotone" dataKey="blocked" stackId="1" stroke="#ff8c5a" fill="#ff8c5a" fillOpacity={0.6} />
+                <Area
+                  type="monotone"
+                  dataKey="threats"
+                  stackId="1"
+                  stroke="#ff6b35"
+                  fill="#ff6b35"
+                  fillOpacity={0.6}
+                />
+                <Area
+                  type="monotone"
+                  dataKey="blocked"
+                  stackId="1"
+                  stroke="#ff8c5a"
+                  fill="#ff8c5a"
+                  fillOpacity={0.6}
+                />
               </AreaChart>
             </ResponsiveContainer>
           </CardContent>
@@ -146,9 +207,13 @@ export function SecurityDashboard() {
                   <TableCell>
                     <Badge
                       variant={
-                        event.severity === 'high' ? 'destructive' :
-                        event.severity === 'medium' ? 'secondary' :
-                        event.severity === 'low' ? 'outline' : 'default'
+                        event.severity === "high"
+                          ? "destructive"
+                          : event.severity === "medium"
+                            ? "secondary"
+                            : event.severity === "low"
+                              ? "outline"
+                              : "default"
                       }
                     >
                       {event.severity}
@@ -158,15 +223,20 @@ export function SecurityDashboard() {
                   <TableCell>
                     <Badge
                       variant={
-                        event.status === 'completed' || event.status === 'resolved' ? 'default' :
-                        event.status === 'blocked' ? 'secondary' : 'outline'
+                        event.status === "completed" || event.status === "resolved"
+                          ? "default"
+                          : event.status === "blocked"
+                            ? "secondary"
+                            : "outline"
                       }
                     >
                       {event.status}
                     </Badge>
                   </TableCell>
                   <TableCell>
-                    <Button variant="ghost" size="sm">Investigate</Button>
+                    <Button variant="ghost" size="sm">
+                      Investigate
+                    </Button>
                   </TableCell>
                 </TableRow>
               ))}
