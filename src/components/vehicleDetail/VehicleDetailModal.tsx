@@ -46,8 +46,9 @@ const VehicleDetailModal: React.FC<VehicleDetailModalProps> = ({
           `http://85.204.247.82:3007/dashboard/detail/${vehicle.id}`,
         );
         setVehicleDetail(res.data);
-      } catch (err) {
-        console.error("Error fetching vehicle detail:", err);
+        // console.log('res.data', res.data.vehicle.photo_front_plate);
+      } catch {
+        // console.error("Error fetching vehicle detail:", err);
         setError("Failed to load vehicle data.");
       } finally {
         setLoading(false);
@@ -74,11 +75,26 @@ const VehicleDetailModal: React.FC<VehicleDetailModalProps> = ({
     return `${lookup.weekday} ${lookup.day}/${lookup.month}/${lookup.year} ${lookup.hour}:${lookup.minute} ${lookup.dayPeriod}`;
   }
 
+  function formatT(value: number) {
+    if (value == null) return "-";
+    return `${value / 1000} t`;
+  }
+
+  function formatM(value: number) {
+    if (value == null) return "-";
+    return `${value / 100} m`;
+  }
+
+  function formatKm(value: number) {
+    if (value == null) return "-";
+    return `${value} km/h`;
+  }
+
   return (
     <Modal
       isOpen={isOpen}
       onClose={onClose}
-      title={`Vehicle Weight Information - ${vehicleDetail?.plate_num_front ?? vehicle?.plate_num_front ?? ""}`}
+      title={`Vehicle Weight Information - ${vehicleDetail?.vehicle.plate_num_front ?? vehicle?.plate_num_front ?? ""}`}
       width={width}
       height={height}
       borderColor={borderColor}
@@ -99,20 +115,23 @@ const VehicleDetailModal: React.FC<VehicleDetailModalProps> = ({
                 <Truck /> Basic Information
               </strong>
 
-              <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-2 mt-2">
+              <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-2 mt-4">
                 {[
                   {
                     label: t("vehicle_id"),
-                    value: vehicleDetail.plate_num_front,
+                    value: vehicleDetail?.vehicle?.plate_num_front,
                   },
                   {
                     label: t("province"),
-                    value: vehicleDetail.country_code_front,
+                    value: vehicleDetail?.vehicle?.country_code_front,
                   },
-                  { label: t("vehicle_type"), value: vehicleDetail.car_type },
+                  {
+                    label: t("vehicle_type"),
+                    value: vehicleDetail?.vehicle?.car_type,
+                  },
                   {
                     label: t("time"),
-                    value: formatDate(vehicleDetail.date_veh),
+                    value: formatDate(vehicleDetail?.vehicle?.date_veh),
                   },
                 ].map((item, i) => (
                   <Card
@@ -125,7 +144,9 @@ const VehicleDetailModal: React.FC<VehicleDetailModalProps> = ({
                       </CardTitle>
                     </CardHeader>
                     <CardContent>
-                      <p className="whitespace-nowrap">{item.value}</p>
+                      <p className="whitespace-nowrap">
+                        {item.value ? item.value : ""}
+                      </p>
                     </CardContent>
                   </Card>
                 ))}
@@ -140,11 +161,13 @@ const VehicleDetailModal: React.FC<VehicleDetailModalProps> = ({
                   <Scale /> Measurements
                 </strong>
 
-                <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-2 mt-2">
+                <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-2 mt-4">
                   {[
                     {
                       label: t("total_weight"),
-                      value: vehicleDetail.vehicle_measures[0].towt_kg,
+                      value: formatT(
+                        vehicleDetail?.vehicle_measures[0]?.towt_kg,
+                      ),
                     },
                     // {
                     //   label: t("width"),
@@ -152,7 +175,9 @@ const VehicleDetailModal: React.FC<VehicleDetailModalProps> = ({
                     // },
                     {
                       label: t("length"),
-                      value: vehicleDetail.vehicle_measures[0].length,
+                      value: formatM(
+                        vehicleDetail?.vehicle_measures[0]?.length,
+                      ),
                     },
                     // {
                     //   label: t("height"),
@@ -160,16 +185,70 @@ const VehicleDetailModal: React.FC<VehicleDetailModalProps> = ({
                     // },
                     {
                       label: t("speed"),
-                      value: vehicleDetail.vehicle_measures[0].speed,
+                      value: formatKm(
+                        vehicleDetail?.vehicle_measures[0]?.speed,
+                      ),
                     },
                     {
                       label: t("number_of_axles"),
-                      value: vehicleDetail.axles.length,
+                      value: vehicleDetail?.axles?.length,
                     },
+                    // {
+                    //   label: t("status"),
+                    //   value: vehicleDetail?.vehicle_measures[0]?.towt_valid,
+                    //   isStatus: true, // 👈 mark this card as status
+                    // },
+                  ].map((item, i) => {
+                    // const status = vehicleDetail.vehicle_measures[0].towt_valid;
+                    return (
+                      <Card
+                        key={i}
+                        className="bg-orange-50 border-0 w-auto inline-block"
+                      >
+                        <CardHeader>
+                          <CardTitle className="text-gray text-xs whitespace-nowrap">
+                            {item.label}
+                          </CardTitle>
+                        </CardHeader>
+                        <CardContent className="flex items-center gap-2">
+                          <p className="whitespace-nowrap">
+                            {item.value ? item.value : "N/A"}
+                          </p>
+                        </CardContent>
+                      </Card>
+                    );
+                  })}
+                </div>
+                <div className="grid grid-cols-1 md:grid-cols-1 lg:grid-cols-1 gap-2 mt-4">
+                  {[
+                    // {
+                    //   label: t("total_weight"),
+                    //   value: formatT(vehicleDetail?.vehicle_measures[0]?.towt_kg),
+                    // },
+                    // {
+                    //   label: t("width"),
+                    //   value: vehicleDetail.vehicle_measures[0].width,
+                    // },
+                    // {
+                    //   label: t("length"),
+                    //   value: formatM(vehicleDetail?.vehicle_measures[0]?.length),
+                    // },
+                    // {
+                    //   label: t("height"),
+                    //   value: vehicleDetail.vehicle_measures[0].length,
+                    // },
+                    // {
+                    //   label: t("speed"),
+                    //   value: formatKm(vehicleDetail?.vehicle_measures[0]?.speed),
+                    // },
+                    // {
+                    //   label: t("number_of_axles"),
+                    //   value: vehicleDetail?.axles?.length,
+                    // },
                     {
                       label: t("status"),
-                      value: vehicleDetail.vehicle_measures[0].towt_valid,
-                      isStatus: true, // 👈 mark this card as status
+                      value: vehicleDetail?.vehicle_measures[0]?.towt_valid,
+                      // isStatus: true, // 👈 mark this card as status
                     },
                   ].map((item, i) => {
                     // const status = vehicleDetail.vehicle_measures[0].towt_valid;
@@ -184,24 +263,20 @@ const VehicleDetailModal: React.FC<VehicleDetailModalProps> = ({
                           </CardTitle>
                         </CardHeader>
                         <CardContent className="flex items-center gap-2">
-                          {item.isStatus ? (
-                            vehicleDetail.vehicle_measures[0].towt_valid ===
-                            "NV" ? (
-                              <span className="px-2 py-0.5 text-[10px] rounded-full font-semibold bg-red-500 text-white">
-                                Not Valid
-                              </span>
-                            ) : vehicleDetail.vehicle_measures[0].towt_valid ===
-                              "OK" ? (
-                              <span className="px-2 py-0.5 text-[10px] rounded-full font-semibold bg-green-600 text-white">
-                                Valid
-                              </span>
-                            ) : (
-                              <span className="px-2 py-0.5 text-[10px] rounded-full font-semibold bg-gray-400 text-white">
-                                {vehicleDetail.vehicle_measures[0].towt_valid}
-                              </span>
-                            )
+                          {vehicleDetail?.vehicle_measures[0]?.towt_valid ===
+                          "NV" ? (
+                            <span className="px-2 py-0.5 text-[10px] rounded-full font-semibold bg-red-500 text-white">
+                              Not Valid
+                            </span>
+                          ) : vehicleDetail?.vehicle_measures[0]?.towt_valid ===
+                            "OK" ? (
+                            <span className="px-2 py-0.5 text-[10px] rounded-full font-semibold bg-green-600 text-white">
+                              Valid
+                            </span>
                           ) : (
-                            <p className="whitespace-nowrap">{item.value ? item.value : 'N/A'}</p>
+                            <span className="px-2 py-0.5 text-[10px] rounded-full font-semibold bg-gray-400 text-white">
+                              {vehicleDetail?.vehicle_measures[0]?.towt_valid}
+                            </span>
                           )}
                         </CardContent>
                       </Card>
@@ -228,16 +303,14 @@ const VehicleDetailModal: React.FC<VehicleDetailModalProps> = ({
                     </CardTitle>
                   </CardHeader>
                   <CardContent className="space-y-3">
-                    {vehicleDetail.axles.map((axle, i) => (
+                    {vehicleDetail?.axles.map((axle, i) => (
                       <div
                         key={i}
                         className="flex justify-between items-center bg-orange-50 px-3 py-2 rounded-md"
                       >
-                        <span className="text-gray">
-                          Axle {axle.axle_no}
-                        </span>
+                        <span className="text-gray">Axle {axle.axle_no}</span>
                         <span className="font-semibold">
-                          {axle.weight_left}t
+                          {formatT(axle.weight_left)}
                         </span>
                       </div>
                     ))}
@@ -252,16 +325,14 @@ const VehicleDetailModal: React.FC<VehicleDetailModalProps> = ({
                     </CardTitle>
                   </CardHeader>
                   <CardContent className="space-y-3">
-                    {vehicleDetail.axles.map((axle, i) => (
+                    {vehicleDetail?.axles.map((axle, i) => (
                       <div
                         key={i}
                         className="flex justify-between items-center bg-orange-50 px-3 py-2 rounded-md"
                       >
-                        <span className="text-gray">
-                          Axle {axle.axle_no}
-                        </span>
+                        <span className="text-gray">Axle {axle.axle_no}</span>
                         <span className="font-semibold">
-                          {axle.weight_right}t
+                          {formatT(axle.weight_right)}
                         </span>
                       </div>
                     ))}
@@ -277,60 +348,59 @@ const VehicleDetailModal: React.FC<VehicleDetailModalProps> = ({
                 {" "}
                 <AlertTriangle className="" /> Legal Limits for Truck
               </strong>
-              <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-2">
+              <div className="grid grid-cols-1 md:grid-cols-2 md:grid-cols-4 gap-2 mt-4">
                 {[
                   {
                     label: "Max Weight",
-                    limit: vehicleDetail.vehicle_measures[0]?.towt_excess,
-                    actual: vehicleDetail.vehicle_measures[0].towt_kg,
+                    limit: vehicleDetail?.vehicle_measures[0]?.towt_excess,
+                    actual: vehicleDetail?.vehicle_measures[0]?.towt_kg,
                     unit: "t",
                   },
-                  {
-                    label: "Max Width",
-                    limit: vehicleDetail.vehicle_measures[0]?.width_excess,
-                    actual: vehicleDetail.vehicle_measures[0].width,
-                    unit: "m",
-                  },
+                  // {
+                  //   label: "Max Width",
+                  //   limit: vehicleDetail.vehicle_measures[0]?.width_excess,
+                  //   actual: vehicleDetail.vehicle_measures[0].width,
+                  //   unit: "m",
+                  // },
                   {
                     label: "Max Length",
-                    limit: vehicleDetail.vehicle_measures[0]?.length_excess,
-                    actual: vehicleDetail.vehicle_measures[0].length,
+                    limit: vehicleDetail?.vehicle_measures[0]?.length_excess,
+                    actual: vehicleDetail?.vehicle_measures[0]?.length,
                     unit: "m",
                   },
-                  {
-                    label: "Max Height",
-                    limit: vehicleDetail.vehicle_measures[0]?.vytm,
-                    actual: vehicleDetail.vehicle_measures[0].vvdf,
-                    unit: "m",
-                  },
+                  // {
+                  //   label: "Max Height",
+                  //   limit: vehicleDetail.vehicle_measures[0]?.vytm,
+                  //   actual: vehicleDetail.vehicle_measures[0].vvdf,
+                  //   unit: "m",
+                  // },
                 ].map((item, i) => {
                   const isOver = Number(item.actual) > Number(item.limit);
 
                   return (
                     <Card
                       key={i}
-                      className="bg-orange-50 border border-orange-200 rounded-xl px-4 py-1"
+                      className="bg-orange-50 border border-orange-200 rounded-xl gap-2"
                     >
-                      <CardHeader className="p-4">
+                      <CardHeader>
                         <CardTitle className="text-xs text-gray">
                           {item.label}
                         </CardTitle>
                       </CardHeader>
 
-                      <CardContent className="p-0">
+                      <CardContent className="space-y-1">
                         {/* LIMIT VALUE (big number) */}
-                        <p className="text-lg font-semibold">
+                        <p className="text-lg">
                           {item.limit}
                           {item.unit}
                         </p>
 
-                        {/* ACTUAL VALUE */}
-                        <p className="text-xs text-gray mt-1">Actual</p>
+                        {/* ACTUAL VALUE label */}
+                        <p className="text-xs text-gray">Actual</p>
 
+                        {/* ACTUAL VALUE */}
                         <p
-                          className={`text-sm font-semibold ${
-                            isOver ? "text-red-600" : "text-green-600"
-                          }`}
+                          className={`text-sm ${isOver ? "text-red-600" : "text-green-600"}`}
                         >
                           {item.actual}
                           {item.unit}
@@ -348,26 +418,26 @@ const VehicleDetailModal: React.FC<VehicleDetailModalProps> = ({
               <Camera className="" /> Vehicle Capture
             </strong>
             <div className="grid grid-cols-1 md:grid-cols-2 gap-2 mt-4">
-              {vehicleDetail.photo_overview && (
+              {vehicleDetail.vehicle.photo_overview && (
                 <img
                   style={{
                     width: "400px",
                     height: "280px",
                     objectFit: "cover",
                   }}
-                  src={`data:image/jpeg;base64,${vehicleDetail.photo_overview}`}
+                  src={`data:image/jpeg;base64,${vehicleDetail?.vehicle?.photo_overview}`}
                   alt="Overview"
                   className="w-md-full h-auto rounded-lg border mx-auto object-cover"
                 />
               )}
-              {vehicleDetail.photo_front_plate && (
+              {vehicleDetail.vehicle.photo_front_plate && (
                 <img
                   style={{
                     width: "400px",
                     height: "280px",
                     objectFit: "cover",
                   }}
-                  src={`data:image/jpeg;base64,${vehicleDetail.photo_front_plate}`}
+                  src={`data:image/jpeg;base64,${vehicleDetail?.vehicle?.photo_front_plate}`}
                   alt="Plate"
                   className="w-md-full h-auto rounded-lg border mx-auto"
                 />

@@ -1,17 +1,42 @@
-import axios from "axios";
+// import axios from "axios";
 
-// Create an Axios instance with a base URL from your .env file
+// // Create an Axios instance with a base URL from your .env file
+// const api = axios.create({
+//   baseURL: import.meta.env.VITE_API_URL,
+// });
+
+// // Optional: automatically attach token if it exists
+// api.interceptors.request.use((config) => {
+//   const token = localStorage.getItem("auth_token");
+//   if (token) {
+//     config.headers.Authorization = `Bearer ${token}`;
+//   }
+//   return config;
+// });
+
+// export default api;
+
+import axios from "axios";
+import { showErrorPopup } from "./errorPopup";
+
 const api = axios.create({
   baseURL: import.meta.env.VITE_API_URL,
 });
 
-// Optional: automatically attach token if it exists
-api.interceptors.request.use((config) => {
-  const token = localStorage.getItem("auth_token");
-  if (token) {
-    config.headers.Authorization = `Bearer ${token}`;
+// Global error interceptor
+api.interceptors.response.use(
+  (response) => response,
+  (error) => {
+    const msg =
+      error?.response?.data?.message ||
+      error?.message ||
+      "Something went wrong";
+
+    showErrorPopup(msg);
+
+    return Promise.reject(error); // keep behavior unchanged
   }
-  return config;
-});
+);
 
 export default api;
+

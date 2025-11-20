@@ -99,22 +99,22 @@ async function fetchCurVehicleFromApi({
   }
 }
 
-function shortId(id: string) {
-  if (!id) return "";
-  return id.substring(0, 5) + "...";
-}
+// function shortId(id: string) {
+//   if (!id) return "";
+//   return id.substring(0, 5) + "...";
+// }
 
-function formatKg(value: any) {
+function formatT(value: number) {
   if (value == null) return "-";
-  return `${value} kg`;
+  return `${value / 1000} t`;
 }
 
-function formatM(value: any) {
+function formatM(value: number) {
   if (value == null) return "-";
-  return `${value} m`;
+  return `${value / 100} m`;
 }
 
-function formatKm(value: any) {
+function formatKm(value: number) {
   if (value == null) return "-";
   return `${value} km/h`;
 }
@@ -284,7 +284,7 @@ export default function CurrentMeasureTable(): JSX.Element {
                          header={t("weight")}
                          sortable
                          headerStyle={{ textAlign: "center" }}
-                         body={(rowData) => formatKg(rowData.towt_kg)}
+                         body={(rowData) => formatT(rowData.towt_kg)}
                        />
                        <Column
                          field="axles"

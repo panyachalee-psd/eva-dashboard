@@ -1,5 +1,5 @@
 "use client";
-import React, { useState, useEffect, JSX } from "react";
+import React, { useState, useEffect, JSX, useCallback  } from "react";
 import {
   DataTable,
   DataTablePageEvent,
@@ -20,7 +20,7 @@ import VehicleDetailModal from "../vehicleDetail/VehicleDetailModal";
 import "./Violated.css";
 import { useTranslation } from "react-i18next";
 import api from "@/utils/axios";
-
+import Swal from "sweetalert2";
 import { VehicleList, LazyState } from "../../models/vehicleModel";
 // VehicleDetailModalProps,
 
@@ -57,7 +57,7 @@ async function fetchViolVehicleFromApi({
 
     const apiData = res.data;
 
-    console.log("res.data", res.data);
+    // console.log("res.data", res.data);
 
     const allData: VehicleList[] = apiData.data;
     const total: number = apiData.totalItems;
@@ -65,7 +65,7 @@ async function fetchViolVehicleFromApi({
     // Optional: Apply local pagination (if API doesn’t handle it)
     // const start = (page - 1) * rows;
     // const end = start + rows;
-    console.log("allData", allData);
+    // console.log("allData", allData);
 
     // Optional: Apply local sorting
     // if (sortField && sortOrder) {
@@ -93,8 +93,8 @@ async function fetchViolVehicleFromApi({
       data: allData,
       total, // ✅ total from API, not local length
     };
-  } catch (error) {
-    console.error("API fetch error:", error);
+  } catch {
+  // console.error("API fetch error:", error);
     return { data: [], total: 0 };
   }
 }
@@ -125,17 +125,17 @@ function shortId(id: string) {
   return id.substring(0, 5) + "...";
 }
 
-function formatKg(value: any) {
+function formatT(value: number) {
   if (value == null) return "-";
-  return `${value} kg`;
+  return `${value / 1000} t`;
 }
 
-function formatM(value: any) {
+function formatM(value: number) {
   if (value == null) return "-";
-  return `${value} m`;
+  return `${value / 100} m`;
 }
 
-function formatKm(value: any) {
+function formatKm(value: number) {
   if (value == null) return "-";
   return `${value} km/h`;
 }
@@ -162,24 +162,31 @@ export default function ViolatedTable(): JSX.Element {
   const [selectedVehicle, setSelectedVehicle] = useState<VehicleList | null>(null);
   const [isModalOpen, setIsModalOpen] = useState(false);
 
-  const loadViolateVehicle = async () => {
-    setLoading(true);
-    const { data, total } = await fetchViolVehicleFromApi({
-      page: lazyState.page + 1,
-      rows: lazyState.rows,
-      sortField: lazyState.sortField,
-      sortOrder: lazyState.sortOrder,
-      filters: lazyState.filters,
-    });
+const loadViolateVehicle = useCallback(async () => {
+  setLoading(true);
 
-    setVehicle(data);
-    setTotalRecords(total);
-    setLoading(false);
-  };
+  const { data, total } = await fetchViolVehicleFromApi({
+    page: lazyState.page + 1,
+    rows: lazyState.rows,
+    sortField: lazyState.sortField,
+    sortOrder: lazyState.sortOrder,
+    filters: lazyState.filters,
+  });
 
-  useEffect(() => {
-    loadViolateVehicle();
-  }, [lazyState.page, lazyState.rows, lazyState.sortField, lazyState.sortOrder]);
+  setVehicle(data);
+  setTotalRecords(total);
+  setLoading(false);
+}, [
+  lazyState.page,
+  lazyState.rows,
+  lazyState.sortField,
+  lazyState.sortOrder,
+  lazyState.filters
+]);
+
+useEffect(() => {
+  loadViolateVehicle();
+}, [loadViolateVehicle]);
   // lazyState.filters.global?.value
 
   // ✅ DataTable event handlers
@@ -288,7 +295,7 @@ export default function ViolatedTable(): JSX.Element {
               header={t("actual_weight")}
               sortable
               headerStyle={{ textAlign: "center" }}
-              body={(rowData) => formatKg(rowData.towt_kg)}
+              body={(rowData) => formatT(rowData.towt_kg)}
             />
             <Column
               field="axles"
