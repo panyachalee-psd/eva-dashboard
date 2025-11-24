@@ -31,6 +31,7 @@
   "province": "Province",
   "type": "Type",
   "actual_weight": "Actual Weight",
+  "weight": "Weight",
   "width": "Width",
   "length": "Length",
   "speed": "Speed",
@@ -40,6 +41,7 @@
   "search_readings_by": "Search readings by Plate Number, Province, Vehicle Type",
   "status": "Status",
   "recent_system_activity": "Recent System Activity",
+  "download_report": "Download Report",
 
 
   "_comment_vehicle_detail": "this is for Vehicle Detail section!!!",

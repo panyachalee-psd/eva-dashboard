@@ -1,10 +1,12 @@
 "use client";
-import React, { useState, useEffect, JSX, useCallback  } from "react";
+import React, { useState, useEffect, JSX, useCallback } from "react";
 import {
   DataTable,
   DataTablePageEvent,
   DataTableSortEvent,
   DataTableFilterEvent,
+  DataTableFilterMetaData,
+  DataTableOperatorFilterMetaData,
 } from "primereact/datatable";
 import { Column } from "primereact/column";
 import { FilterMatchMode } from "primereact/api";
@@ -12,95 +14,59 @@ import { InputText } from "primereact/inputtext";
 import { IconField } from "primereact/iconfield";
 import { InputIcon } from "primereact/inputicon";
 import { Card, CardContent } from "../ui/card";
-// , CardHeader, CardTitle
-// import { Icon } from "../components/ui/icon"
-// import moment from "moment";
-// import axios from "axios"; // adjust path if needed
 import VehicleDetailModal from "../vehicleDetail/VehicleDetailModal";
 import "./Violated.css";
 import { useTranslation } from "react-i18next";
 import api from "@/utils/axios";
-import Swal from "sweetalert2";
 import { VehicleList, LazyState } from "../../models/vehicleModel";
-// VehicleDetailModalProps,
+
+type DataTableFilterMeta = {
+  [key: string]: DataTableFilterMetaData | DataTableOperatorFilterMetaData;
+};
 
 async function fetchViolVehicleFromApi({
   page,
   rows,
   sortField,
   sortOrder,
-  // filters,
+  filters,
 }: {
   page: number;
   rows: number;
   sortField?: string;
   sortOrder?: 1 | -1 | 0 | null;
-  filters: Record<string, unknown>;
+  filters: LazyState["filters"];
 }): Promise<{ data: VehicleList[]; total: number }> {
   try {
-    // console.log('hi fetch', page);
-    // console.log('hi fetch', rows);
-    // console.log('hi fetch', sortField);
-    // const baseUrl = import.meta.env.VITE_API_URL;
+    const sortOrderValue =
+      sortOrder === 1 ? "ASC" : sortOrder === -1 ? "DESC" : undefined;
 
-    const sortOrderValue = sortOrder === 1 ? "ASC" : sortOrder === -1 ? "DESC" : undefined;
-    // console.log('hi fetch', sortOrderValue);
+    const searchText = filters.global?.value?.toString() ?? "";
 
-    const res = await api.get(`/dashboard`, {
+    const res = await api.get("/dashboard", {
       params: {
-        page: page,
+        page,
         perPage: rows,
         sortBy: sortField,
         sortOrder: sortOrderValue,
+        isOverweight: true,
+        search: searchText,
       },
     });
 
-    const apiData = res.data;
-
-    // console.log("res.data", res.data);
-
-    const allData: VehicleList[] = apiData.data;
-    const total: number = apiData.totalItems;
-
-    // Optional: Apply local pagination (if API doesn’t handle it)
-    // const start = (page - 1) * rows;
-    // const end = start + rows;
-    // console.log("allData", allData);
-
-    // Optional: Apply local sorting
-    // if (sortField && sortOrder) {
-    //   allData = [...allData].sort((a, b) => {
-    //     const valA = (a as any)[sortField];
-    //     const valB = (b as any)[sortField];
-    //     if (valA < valB) return sortOrder === 1 ? -1 : 1;
-    //     if (valA > valB) return sortOrder === 1 ? 1 : -1;
-    //     return 0;
-    //   });
-    // }
-
-    // Optional: Apply filtering
-    // const globalFilter = filters?.global?.value?.toLowerCase();
-    // const filteredData = globalFilter
-    //   ? allData.filter((item) =>
-    //       Object.values(item).some((val) =>
-    //         String(val).toLowerCase().includes(globalFilter)
-    //       )
-    //     )
-    //   : allData;
-    //   console.log('filteredData', filteredData);
-
     return {
-      data: allData,
-      total, // ✅ total from API, not local length
+      data: res.data.data,
+      total: res.data.totalItems,
     };
   } catch {
-  // console.error("API fetch error:", error);
     return { data: [], total: 0 };
   }
 }
 
 const emptyTemplate = (value?: unknown): string => {
-  return value === null || value === undefined || value === "" ? "-" : String(value);
+  return value === null || value === undefined || value === ""
+    ? "-"
+    : String(value);
 };
 
 export function timeAgo(dateString: string) {
@@ -141,7 +107,8 @@ function formatKm(value: number) {
 }
 
 export default function ViolatedTable(): JSX.Element {
-  // const [customers, setCustomers] = useState<Customer[]>([]);
+  const { t } = useTranslation();
+
   const [vehicles, setVehicle] = useState<VehicleList[]>([]);
   const [totalRecords, setTotalRecords] = useState<number>(0);
   const [loading, setLoading] = useState<boolean>(false);
@@ -154,50 +121,115 @@ export default function ViolatedTable(): JSX.Element {
     sortOrder: undefined,
     filters: {
       global: { value: null, matchMode: FilterMatchMode.CONTAINS },
-      plate: { value: null, matchMode: FilterMatchMode.CONTAINS },
-      vehicleType: { value: null, matchMode: FilterMatchMode.EQUALS },
-      speed: { value: null, matchMode: FilterMatchMode.EQUALS },
+      // plate_num_front: { value: null, matchMode: FilterMatchMode.CONTAINS },
+      // vehicleType: { value: null, matchMode: FilterMatchMode.EQUALS },
+      // speed: { value: null, matchMode: FilterMatchMode.EQUALS },
     },
   });
-  const [selectedVehicle, setSelectedVehicle] = useState<VehicleList | null>(null);
+
+  const [selectedVehicle, setSelectedVehicle] = useState<VehicleList | null>(
+    null,
+  );
   const [isModalOpen, setIsModalOpen] = useState(false);
 
-const loadViolateVehicle = useCallback(async () => {
-  setLoading(true);
+  // -----------------------------
+  // Load data from API
+  // -----------------------------
+  const loadViolateVehicle = useCallback(async () => {
+    setLoading(true);
+    const { data, total } = await fetchViolVehicleFromApi({
+      page: lazyState.page + 1,
+      rows: lazyState.rows,
+      sortField: lazyState.sortField,
+      sortOrder: lazyState.sortOrder,
+      filters: lazyState.filters,
+    });
+    setVehicle(data);
+    setTotalRecords(total);
+    setLoading(false);
+  }, [
+    lazyState.page,
+    lazyState.rows,
+    lazyState.sortField,
+    lazyState.sortOrder,
+    lazyState.filters,
+  ]);
 
-  const { data, total } = await fetchViolVehicleFromApi({
-    page: lazyState.page + 1,
-    rows: lazyState.rows,
-    sortField: lazyState.sortField,
-    sortOrder: lazyState.sortOrder,
-    filters: lazyState.filters,
-  });
+  useEffect(() => {
+    loadViolateVehicle();
+  }, [loadViolateVehicle]);
 
-  setVehicle(data);
-  setTotalRecords(total);
-  setLoading(false);
-}, [
-  lazyState.page,
-  lazyState.rows,
-  lazyState.sortField,
-  lazyState.sortOrder,
-  lazyState.filters
-]);
+  // -----------------------------
+  // Handlers
+  // -----------------------------
+  const onPage = (event: DataTablePageEvent) => {
+    setLazyState((prev) => ({
+      ...prev,
+      first: event.first,
+      rows: event.rows,
+      page: event.page ?? 0,
+    }));
+  };
 
-useEffect(() => {
-  loadViolateVehicle();
-}, [loadViolateVehicle]);
-  // lazyState.filters.global?.value
+  const onSort = (event: DataTableSortEvent) => {
+    setLazyState((prev) => ({
+      ...prev,
+      sortField: event.sortField ?? undefined,
+      sortOrder: event.sortOrder ?? undefined,
+    }));
+  };
 
-  // ✅ DataTable event handlers
-  const onPage = (event: DataTablePageEvent) => setLazyState((prev) => ({ ...prev, ...event }));
-  const onSort = (event: DataTableSortEvent) => setLazyState((prev) => ({ ...prev, ...event }));
-  const onFilter = (event: DataTableFilterEvent) =>
-    setLazyState((prev) => ({ ...prev, ...event, first: 0 }));
+  const onFilter = (event: DataTableFilterEvent) => {
+    const newFilters: LazyState["filters"] = {};
 
-  const { t } = useTranslation();
+    Object.keys(event.filters).forEach((key) => {
+      const f = event.filters[key];
 
-  // ✅ Global search
+      if (!f) return;
+
+      // Single-value filter
+      if ("value" in f && "matchMode" in f) {
+        newFilters[key] = {
+          value: f.value ?? null,
+          matchMode:
+            f.matchMode as (typeof FilterMatchMode)[keyof typeof FilterMatchMode],
+        };
+      }
+
+      // Multi-operator filter (take first constraint)
+      else if (
+        "operator" in f &&
+        Array.isArray(f.constraints) &&
+        f.constraints.length > 0
+      ) {
+        const constraint = f.constraints[0];
+        newFilters[key] = {
+          value: constraint.value ?? null,
+          matchMode:
+            constraint.matchMode as (typeof FilterMatchMode)[keyof typeof FilterMatchMode],
+        };
+      }
+    });
+
+    setLazyState((prev) => ({
+      ...prev,
+      first: 0,
+      filters: newFilters,
+    }));
+  };
+
+  // -----------------------------
+  // Map LazyState.filters to DataTableFilterMeta
+  // -----------------------------
+  const primeFilters: DataTableFilterMeta = Object.fromEntries(
+    Object.entries(lazyState.filters)
+      .filter(([_, f]) => f !== undefined)
+      .map(([key, f]) => [key, { value: f!.value, matchMode: f!.matchMode }]),
+  ) as DataTableFilterMeta;
+
+  // -----------------------------
+  // Search Header
+  // -----------------------------
   const renderHeader = () => (
     <div className="w-full">
       <IconField iconPosition="left">
@@ -205,25 +237,28 @@ useEffect(() => {
         <InputText
           variant="filled"
           className="w-full"
+          placeholder={t("search_violations_by")}
           onInput={(e: React.ChangeEvent<HTMLInputElement>) => {
+            const value = e.target.value;
             setLazyState((prev) => ({
               ...prev,
               filters: {
                 ...prev.filters,
-                global: { value: e.target.value, matchMode: FilterMatchMode.CONTAINS },
+                global: { value, matchMode: FilterMatchMode.CONTAINS },
               },
               first: 0,
               page: 0,
             }));
           }}
-          placeholder={t("search_violations_by")}
         />
       </IconField>
     </div>
   );
 
+  // -----------------------------
+  // Render
+  // -----------------------------
   return (
-    // <div className="card">
     <>
       <Card>
         <CardContent>
@@ -240,30 +275,24 @@ useEffect(() => {
             onFilter={onFilter}
             sortField={lazyState.sortField}
             sortOrder={lazyState.sortOrder}
-            // filters={lazyState.filters}
-            header={renderHeader()}
+            filters={primeFilters}
+            globalFilterFields={[
+              "plate_num_front",
+              "country_code_front",
+              "car_type",
+            ]}
             dataKey="id"
-            globalFilterFields={["Vehicle", "Station", "Type"]}
+            header={renderHeader()}
             emptyMessage="No data found."
             onRowClick={(e) => {
               setSelectedVehicle(e.data as VehicleList);
               setIsModalOpen(true);
             }}
           >
-            {/* <Column
-          // field="id"
-          body={(_, options) =>
-    vehicles.length > 0 ? lazyState.first + options.rowIndex + 1 : "-"}
-          header="ID"
-          style={{ width: "10%", textAlign: "center" }}
-          alignHeader="center"
-        /> */}
             <Column
               field="id"
               header={t("violation_id")}
-              // filter
               sortable
-              // filterPlaceholder="Search vehicle"
               headerStyle={{ textAlign: "center" }}
               body={(rowData) => shortId(rowData.id)}
             />
@@ -271,29 +300,26 @@ useEffect(() => {
               field="plate_num_front"
               header={t("vehicle")}
               sortable
-              // filter
-              // filterPlaceholder="Search country"
               headerStyle={{ textAlign: "center" }}
               body={(rowData) => emptyTemplate(rowData.plate_num_front)}
             />
             <Column
               field="country_code_front"
               header={t("province")}
-              // sortable
               headerStyle={{ textAlign: "center" }}
               body={(rowData) => emptyTemplate(rowData.country_code_front)}
             />
             <Column
               field="car_type"
               header={t("type")}
-              // sortable
+              sortable
               headerStyle={{ textAlign: "center" }}
               body={(rowData) => emptyTemplate(rowData.car_type)}
             />
             <Column
               field="towt_kg"
-              header={t("actual_weight")}
-              sortable
+              header={t("weight")}
+              // sortable
               headerStyle={{ textAlign: "center" }}
               body={(rowData) => formatT(rowData.towt_kg)}
             />
@@ -301,15 +327,13 @@ useEffect(() => {
               field="axles"
               header={t("axle")}
               sortable
-              // filter
-              // filterPlaceholder="Search Station"
               headerStyle={{ textAlign: "center" }}
-               body={(rowData) => emptyTemplate(rowData.axles)}
+              body={(rowData) => emptyTemplate(rowData.axles)}
             />
             <Column
               field="length"
               header={t("length")}
-              sortable
+              // sortable
               headerStyle={{ textAlign: "center" }}
               body={(rowData) => formatM(rowData.length)}
             />
@@ -325,12 +349,6 @@ useEffect(() => {
               headerStyle={{ textAlign: "center" }}
               body={(rowData) => timeAgo(rowData.date_veh)}
             />
-            {/* <Column
-              field="severity"
-              header={t("severity")}
-              headerStyle={{ textAlign: "center" }}
-              body={(rowData) => emptyTemplate(rowData.severity)}
-            /> */}
           </DataTable>
         </CardContent>
       </Card>
@@ -343,8 +361,214 @@ useEffect(() => {
         height="max-h-[80vh]"
         borderColor=""
       />
-
-      
     </>
   );
 }
+
+// export default function ViolatedTable(): JSX.Element {
+//   // const [customers, setCustomers] = useState<Customer[]>([]);
+//   const [vehicles, setVehicle] = useState<VehicleList[]>([]);
+//   const [totalRecords, setTotalRecords] = useState<number>(0);
+//   const [loading, setLoading] = useState<boolean>(false);
+
+//   const [lazyState, setLazyState] = useState<LazyState>({
+//     first: 0,
+//     rows: 10,
+//     page: 0,
+//     sortField: undefined,
+//     sortOrder: undefined,
+//     filters: {
+//       global: { value: null, matchMode: FilterMatchMode.CONTAINS },
+//       plate: { value: null, matchMode: FilterMatchMode.CONTAINS },
+//       vehicleType: { value: null, matchMode: FilterMatchMode.EQUALS },
+//       speed: { value: null, matchMode: FilterMatchMode.EQUALS },
+//     },
+//   });
+//   const [selectedVehicle, setSelectedVehicle] = useState<VehicleList | null>(null);
+//   const [isModalOpen, setIsModalOpen] = useState(false);
+
+// const loadViolateVehicle = useCallback(async () => {
+//   setLoading(true);
+
+//   const { data, total } = await fetchViolVehicleFromApi({
+//     page: lazyState.page + 1,
+//     rows: lazyState.rows,
+//     sortField: lazyState.sortField,
+//     sortOrder: lazyState.sortOrder,
+//     filters: lazyState.filters,
+//   });
+
+//   setVehicle(data);
+//   setTotalRecords(total);
+//   setLoading(false);
+// }, [
+//   lazyState.page,
+//   lazyState.rows,
+//   lazyState.sortField,
+//   lazyState.sortOrder,
+//   lazyState.filters
+// ]);
+
+// useEffect(() => {
+//   loadViolateVehicle();
+// }, [loadViolateVehicle]);
+//   // lazyState.filters.global?.value
+
+//   // ✅ DataTable event handlers
+//   const onPage = (event: DataTablePageEvent) => setLazyState((prev) => ({ ...prev, ...event }));
+//   const onSort = (event: DataTableSortEvent) => setLazyState((prev) => ({ ...prev, ...event }));
+//   const onFilter = (event: DataTableFilterEvent) =>
+//     setLazyState((prev) => ({ ...prev, ...event, first: 0 }));
+
+//   const { t } = useTranslation();
+
+//   // ✅ Global search
+//   const renderHeader = () => (
+//     <div className="w-full">
+//       <IconField iconPosition="left">
+//         <InputIcon className="pi pi-search" />
+//         <InputText
+//           variant="filled"
+//           className="w-full"
+//           onInput={(e: React.ChangeEvent<HTMLInputElement>) => {
+//             setLazyState((prev) => ({
+//               ...prev,
+//               filters: {
+//                 ...prev.filters,
+//                 global: { value: e.target.value, matchMode: FilterMatchMode.CONTAINS },
+//               },
+//               first: 0,
+//               page: 0,
+//             }));
+//           }}
+//           placeholder={t("search_violations_by")}
+//         />
+//       </IconField>
+//     </div>
+//   );
+
+//   return (
+//     // <div className="card">
+//     <>
+//       <Card>
+//         <CardContent>
+//           <DataTable
+//             value={vehicles}
+//             paginator
+//             rows={lazyState.rows}
+//             totalRecords={totalRecords}
+//             first={lazyState.first}
+//             lazy
+//             loading={loading}
+//             onPage={onPage}
+//             onSort={onSort}
+//             onFilter={onFilter}
+//             sortField={lazyState.sortField}
+//             sortOrder={lazyState.sortOrder}
+//             // filters={lazyState.filters}
+//             header={renderHeader()}
+//             dataKey="id"
+//             globalFilterFields={["Vehicle", "Station", "Type"]}
+//             emptyMessage="No data found."
+//             onRowClick={(e) => {
+//               setSelectedVehicle(e.data as VehicleList);
+//               setIsModalOpen(true);
+//             }}
+//           >
+//             {/* <Column
+//           // field="id"
+//           body={(_, options) =>
+//     vehicles.length > 0 ? lazyState.first + options.rowIndex + 1 : "-"}
+//           header="ID"
+//           style={{ width: "10%", textAlign: "center" }}
+//           alignHeader="center"
+//         /> */}
+//             <Column
+//               field="id"
+//               header={t("violation_id")}
+//               // filter
+//               sortable
+//               // filterPlaceholder="Search vehicle"
+//               headerStyle={{ textAlign: "center" }}
+//               body={(rowData) => shortId(rowData.id)}
+//             />
+//             <Column
+//               field="plate_num_front"
+//               header={t("vehicle")}
+//               sortable
+//               // filter
+//               // filterPlaceholder="Search country"
+//               headerStyle={{ textAlign: "center" }}
+//               body={(rowData) => emptyTemplate(rowData.plate_num_front)}
+//             />
+//             <Column
+//               field="country_code_front"
+//               header={t("province")}
+//               // sortable
+//               headerStyle={{ textAlign: "center" }}
+//               body={(rowData) => emptyTemplate(rowData.country_code_front)}
+//             />
+//             <Column
+//               field="car_type"
+//               header={t("type")}
+//               // sortable
+//               headerStyle={{ textAlign: "center" }}
+//               body={(rowData) => emptyTemplate(rowData.car_type)}
+//             />
+//             <Column
+//               field="towt_kg"
+//               header={t("actual_weight")}
+//               sortable
+//               headerStyle={{ textAlign: "center" }}
+//               body={(rowData) => formatT(rowData.towt_kg)}
+//             />
+//             <Column
+//               field="axles"
+//               header={t("axle")}
+//               sortable
+//               // filter
+//               // filterPlaceholder="Search Station"
+//               headerStyle={{ textAlign: "center" }}
+//                body={(rowData) => emptyTemplate(rowData.axles)}
+//             />
+//             <Column
+//               field="length"
+//               header={t("length")}
+//               sortable
+//               headerStyle={{ textAlign: "center" }}
+//               body={(rowData) => formatM(rowData.length)}
+//             />
+//             <Column
+//               field="speed"
+//               header={t("speed")}
+//               headerStyle={{ textAlign: "center" }}
+//               body={(rowData) => formatKm(rowData.speed)}
+//             />
+//             <Column
+//               field="date_veh"
+//               header={t("time")}
+//               headerStyle={{ textAlign: "center" }}
+//               body={(rowData) => timeAgo(rowData.date_veh)}
+//             />
+//             {/* <Column
+//               field="severity"
+//               header={t("severity")}
+//               headerStyle={{ textAlign: "center" }}
+//               body={(rowData) => emptyTemplate(rowData.severity)}
+//             /> */}
+//           </DataTable>
+//         </CardContent>
+//       </Card>
+
+//       <VehicleDetailModal
+//         isOpen={isModalOpen}
+//         onClose={() => setIsModalOpen(false)}
+//         vehicle={selectedVehicle}
+//         width="w-full max-w-[1700px]"
+//         height="max-h-[80vh]"
+//         borderColor=""
+//       />
+
+//     </>
+//   );
+// }

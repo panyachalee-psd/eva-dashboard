@@ -1,3 +1,4 @@
+import { FilterMatchMode } from "primereact/api";
 interface Axel {
   axle_no: number;
   weight: number;
@@ -91,13 +92,52 @@ interface VehicleList {
 }
 
 // ✅ Define lazy state type
+// interface LazyState {
+//   first: number;
+//   rows: number;
+//   page: number;
+//   sortField?: string;
+//   sortOrder?: 1 | -1 | 0 | null | undefined;
+//   filters: Record<string, unknown>;
+// }
+
+interface FilterMeta {
+  value: string | number | null;
+  matchMode: typeof FilterMatchMode[keyof typeof FilterMatchMode];
+}
+
 interface LazyState {
   first: number;
   rows: number;
   page: number;
   sortField?: string;
-  sortOrder?: 1 | -1 | 0 | null | undefined;
-  filters: Record<string, unknown>;
+  sortOrder?: 1 | -1 | 0 | null;
+  filters: {
+    global?: FilterMeta;
+    plate?: FilterMeta;
+    vehicleType?: FilterMeta;
+    speed?: FilterMeta;
+    [key: string]: FilterMeta | undefined; // allow dynamic keys
+  };
+}
+ 
+interface TraffViolation {
+  dateTime: string,
+  vehicle_count: number,
+  violations_count: number
 }
 
-export { VehicleDetailModalProps, VehcleViolDetail, LazyState, VehicleList };
+interface WeightDistri {
+  weight_range: string,
+  count: number
+}
+
+interface WimSummary {
+  total: number,
+  overweight_count: number,
+  overweight_percentage: number,
+  total_weight: number,
+  average_speed: number,
+  average_total_weight: number
+}
+export { VehicleDetailModalProps, VehcleViolDetail, LazyState, VehicleList, FilterMeta, TraffViolation, WeightDistri, WimSummary };

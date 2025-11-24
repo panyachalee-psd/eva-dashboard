@@ -76,17 +76,27 @@ const VehicleDetailModal: React.FC<VehicleDetailModalProps> = ({
   }
 
   function formatT(value: number) {
-    if (value == null) return "-";
+    if (value == null) return "N/A";
     return `${value / 1000} t`;
   }
 
+  function formatTNounit(value: number) {
+    if (value == null) return "N/A";
+    return `${value / 1000}`;
+  }
+
   function formatM(value: number) {
-    if (value == null) return "-";
+    if (value == null) return "N/A";
     return `${value / 100} m`;
   }
 
+   function formatMNounit(value: number) {
+    if (value == null) return "N/A";
+    return `${value / 100}`;
+  }
+
   function formatKm(value: number) {
-    if (value == null) return "-";
+    if (value == null) return "N/A";
     return `${value} km/h`;
   }
 
@@ -352,8 +362,8 @@ const VehicleDetailModal: React.FC<VehicleDetailModalProps> = ({
                 {[
                   {
                     label: "Max Weight",
-                    limit: vehicleDetail?.vehicle_measures[0]?.towt_excess,
-                    actual: vehicleDetail?.vehicle_measures[0]?.towt_kg,
+                    limit: formatTNounit(vehicleDetail?.maximum?.max_weight),
+                    actual: formatTNounit(vehicleDetail?.vehicle_measures[0]?.towt_kg),
                     unit: "t",
                   },
                   // {
@@ -364,8 +374,8 @@ const VehicleDetailModal: React.FC<VehicleDetailModalProps> = ({
                   // },
                   {
                     label: "Max Length",
-                    limit: vehicleDetail?.vehicle_measures[0]?.length_excess,
-                    actual: vehicleDetail?.vehicle_measures[0]?.length,
+                    limit: formatMNounit(vehicleDetail?.maximum?.max_length),
+                    actual: formatMNounit(vehicleDetail?.vehicle_measures[0]?.length),
                     unit: "m",
                   },
                   // {
@@ -381,6 +391,7 @@ const VehicleDetailModal: React.FC<VehicleDetailModalProps> = ({
                     <Card
                       key={i}
                       className="bg-orange-50 border border-orange-200 rounded-xl gap-2"
+                      data-testid="legal-limits-card"
                     >
                       <CardHeader>
                         <CardTitle className="text-xs text-gray">
@@ -403,7 +414,7 @@ const VehicleDetailModal: React.FC<VehicleDetailModalProps> = ({
                           className={`text-sm ${isOver ? "text-red-600" : "text-green-600"}`}
                         >
                           {item.actual}
-                          {item.unit}
+                          {isOver}
                         </p>
                       </CardContent>
                     </Card>

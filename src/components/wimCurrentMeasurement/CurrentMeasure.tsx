@@ -1,10 +1,12 @@
 "use client";
-import React, { useState, useEffect, JSX } from "react";
+import React, { useState, useEffect, JSX, useCallback } from "react";
 import {
   DataTable,
   DataTablePageEvent,
   DataTableSortEvent,
   DataTableFilterEvent,
+  DataTableFilterMetaData,
+  DataTableOperatorFilterMetaData,
 } from "primereact/datatable";
 import { Column } from "primereact/column";
 import { FilterMatchMode } from "primereact/api";
@@ -12,97 +14,53 @@ import { InputText } from "primereact/inputtext";
 import { IconField } from "primereact/iconfield";
 import { InputIcon } from "primereact/inputicon";
 import { Card, CardContent } from "../ui/card";
-// , CardHeader, CardTitle
-// import { Icon } from "../components/ui/icon"
-// import moment from "moment";
-// import axios from "axios"; // adjust path if needed
 import VehicleDetailModal from "../vehicleDetail/VehicleDetailModal";
 import "./CurrentMeasure.css";
 import { useTranslation } from "react-i18next";
 import api from "@/utils/axios";
-import { format } from "date-fns"; 
+import { format } from "date-fns";
 import { VehicleList, LazyState } from "../../models/vehicleModel";
-//
+
+type DataTableFilterMeta = {
+  [key: string]: DataTableFilterMetaData | DataTableOperatorFilterMetaData;
+};
 
 async function fetchCurVehicleFromApi({
   page,
   rows,
   sortField,
   sortOrder,
-  // filters,
+  filters,
 }: {
   page: number;
   rows: number;
   sortField?: string;
   sortOrder?: 1 | -1 | 0 | null;
-  filters: Record<string, unknown>;
+  filters: LazyState["filters"];
 }): Promise<{ data: VehicleList[]; total: number }> {
   try {
-    // console.log('hi fetch', page);
-    // console.log('hi fetch', rows);
-    // console.log('hi fetch', sortField);
-    // const baseUrl = import.meta.env.VITE_API_URL;
+    const sortOrderValue =
+      sortOrder === 1 ? "ASC" : sortOrder === -1 ? "DESC" : undefined;
+    const searchText = filters.global?.value?.toString() ?? "";
 
-    const sortOrderValue = sortOrder === 1 ? "ASC" : sortOrder === -1 ? "DESC" : undefined;
-    // console.log('hi fetch', sortOrderValue);
-
-     const res = await api.get(`/dashboard`, {
+    const res = await api.get(`/dashboard`, {
       params: {
         page: page,
         perPage: rows,
         sortBy: sortField,
         sortOrder: sortOrderValue,
+        search: searchText,
       },
     });
 
-    const apiData = res.data;
-
-    console.log("res.data", res.data);
-
-    const allData: VehicleList[] = apiData.data;
-    const total: number = apiData.totalItems;
-
-    // Optional: Apply local pagination (if API doesn’t handle it)
-    // const start = (page - 1) * rows;
-    // const end = start + rows;
-    console.log("allData", allData);
-
-    // Optional: Apply local sorting
-    // if (sortField && sortOrder) {
-    //   allData = [...allData].sort((a, b) => {
-    //     const valA = (a as any)[sortField];
-    //     const valB = (b as any)[sortField];
-    //     if (valA < valB) return sortOrder === 1 ? -1 : 1;
-    //     if (valA > valB) return sortOrder === 1 ? 1 : -1;
-    //     return 0;
-    //   });
-    // }
-
-    // Optional: Apply filtering
-    // const globalFilter = filters?.global?.value?.toLowerCase();
-    // const filteredData = globalFilter
-    //   ? allData.filter((item) =>
-    //       Object.values(item).some((val) =>
-    //         String(val).toLowerCase().includes(globalFilter)
-    //       )
-    //     )
-    //   : allData;
-    //   console.log('filteredData', filteredData);
-
     return {
-      data: allData,
-      total, // ✅ total from API, not local length
+      data: res.data.data,
+      total: res.data.totalItems,
     };
   } catch (error) {
-    console.error("API fetch error:", error);
     return { data: [], total: 0 };
   }
 }
-
-// function shortId(id: string) {
-//   if (!id) return "";
-//   return id.substring(0, 5) + "...";
-// }
 
 function formatT(value: number) {
   if (value == null) return "-";
@@ -119,19 +77,27 @@ function formatKm(value: number) {
   return `${value} km/h`;
 }
 
-const formatDate = (dateString: string) => {
-  const date = new Date(dateString);  // Convert the ISO string to Date object
-  return format(date, 'yyyy-MM-dd HH:mm:ss'); // Format the date
+// export const formatDate = (dateString: string) => {
+//   const date = new Date(dateString); // Convert the ISO string to Date object
+//   return format(date, "yyyy-MM-dd HH:mm:ss"); // Format the date
+// };
+export const formatDate = (dateString: string | undefined | null) => {
+  if (!dateString) return "-"; // fallback for empty/undefined/null
+
+  const date = new Date(dateString);
+  if (isNaN(date.getTime())) return "Invalid Date"; // fallback for invalid date
+
+  return format(date, "yyyy/MM/dd HH:mm:ss");
 };
 
-
 const emptyTemplate = (value?: unknown): string => {
-  return value === null || value === undefined || value === "" ? "-" : String(value);
+  return value === null || value === undefined || value === ""
+    ? "-"
+    : String(value);
 };
 
 export default function CurrentMeasureTable(): JSX.Element {
-  // const [customers, setCustomers] = useState<Customer[]>([]);
-  // const baseURL = import.meta.env.VITE_API_URL;
+  const { t } = useTranslation();
 
   const [vehicles, setVehicle] = useState<VehicleList[]>([]);
   const [totalRecords, setTotalRecords] = useState<number>(0);
@@ -145,15 +111,17 @@ export default function CurrentMeasureTable(): JSX.Element {
     sortOrder: undefined,
     filters: {
       global: { value: null, matchMode: FilterMatchMode.CONTAINS },
-      plate: { value: null, matchMode: FilterMatchMode.CONTAINS },
-      vehicleType: { value: null, matchMode: FilterMatchMode.EQUALS },
-      speed: { value: null, matchMode: FilterMatchMode.EQUALS },
+      // plate: { value: null, matchMode: FilterMatchMode.CONTAINS },
+      // vehicleType: { value: null, matchMode: FilterMatchMode.EQUALS },
+      // speed: { value: null, matchMode: FilterMatchMode.EQUALS },
     },
   });
-  const [selectedVehicle, setSelectedVehicle] = useState<VehicleList | null>(null);
+  const [selectedVehicle, setSelectedVehicle] = useState<VehicleList | null>(
+    null,
+  );
   const [isModalOpen, setIsModalOpen] = useState(false);
 
-  const loadViolateVehicle = async () => {
+  const loadViolateVehicle = useCallback(async () => {
     setLoading(true);
     const { data, total } = await fetchCurVehicleFromApi({
       page: lazyState.page + 1,
@@ -166,19 +134,86 @@ export default function CurrentMeasureTable(): JSX.Element {
     setVehicle(data);
     setTotalRecords(total);
     setLoading(false);
-  };
+  }, [
+    lazyState.page,
+    lazyState.rows,
+    lazyState.sortField,
+    lazyState.sortOrder,
+    lazyState.filters,
+  ]);
 
   useEffect(() => {
     loadViolateVehicle();
-  }, [lazyState.page, lazyState.rows, lazyState.sortField, lazyState.sortOrder]);
+  }, [loadViolateVehicle]);
 
   // ✅ DataTable event handlers
-  const onPage = (event: DataTablePageEvent) => setLazyState((prev) => ({ ...prev, ...event }));
-  const onSort = (event: DataTableSortEvent) => setLazyState((prev) => ({ ...prev, ...event }));
-  const onFilter = (event: DataTableFilterEvent) =>
-    setLazyState((prev) => ({ ...prev, ...event, first: 0 }));
+  // -----------------------------
+  // Handlers
+  // -----------------------------
+  const onPage = (event: DataTablePageEvent) => {
+    setLazyState((prev) => ({
+      ...prev,
+      first: event.first,
+      rows: event.rows,
+      page: event.page ?? 0,
+    }));
+  };
 
-  const { t } = useTranslation();
+  const onSort = (event: DataTableSortEvent) => {
+    setLazyState((prev) => ({
+      ...prev,
+      sortField: event.sortField ?? undefined,
+      sortOrder: event.sortOrder ?? undefined,
+    }));
+  };
+
+  const onFilter = (event: DataTableFilterEvent) => {
+    const newFilters: LazyState["filters"] = {};
+
+    Object.keys(event.filters).forEach((key) => {
+      const f = event.filters[key];
+
+      if (!f) return;
+
+      // Single-value filter
+      if ("value" in f && "matchMode" in f) {
+        newFilters[key] = {
+          value: f.value ?? null,
+          matchMode:
+            f.matchMode as (typeof FilterMatchMode)[keyof typeof FilterMatchMode],
+        };
+      }
+
+      // Multi-operator filter (take first constraint)
+      else if (
+        "operator" in f &&
+        Array.isArray(f.constraints) &&
+        f.constraints.length > 0
+      ) {
+        const constraint = f.constraints[0];
+        newFilters[key] = {
+          value: constraint.value ?? null,
+          matchMode:
+            constraint.matchMode as (typeof FilterMatchMode)[keyof typeof FilterMatchMode],
+        };
+      }
+    });
+
+    setLazyState((prev) => ({
+      ...prev,
+      first: 0,
+      filters: newFilters,
+    }));
+  };
+
+  // -----------------------------
+  // Map LazyState.filters to DataTableFilterMeta
+  // -----------------------------
+  const primeFilters: DataTableFilterMeta = Object.fromEntries(
+    Object.entries(lazyState.filters)
+      .filter(([_, f]) => f !== undefined)
+      .map(([key, f]) => [key, { value: f!.value, matchMode: f!.matchMode }]),
+  ) as DataTableFilterMeta;
 
   // ✅ Global search
   const renderHeader = () => (
@@ -188,18 +223,19 @@ export default function CurrentMeasureTable(): JSX.Element {
         <InputText
           variant="filled"
           className="w-full"
+          placeholder={t("search_violations_by")}
           onInput={(e: React.ChangeEvent<HTMLInputElement>) => {
+            const value = e.target.value;
             setLazyState((prev) => ({
               ...prev,
               filters: {
                 ...prev.filters,
-                global: { value: e.target.value, matchMode: FilterMatchMode.CONTAINS },
+                global: { value, matchMode: FilterMatchMode.CONTAINS },
               },
               first: 0,
               page: 0,
             }));
           }}
-          placeholder={t("search_readings_by")}
         />
       </IconField>
     </div>
@@ -223,10 +259,14 @@ export default function CurrentMeasureTable(): JSX.Element {
             onFilter={onFilter}
             sortField={lazyState.sortField}
             sortOrder={lazyState.sortOrder}
-            // filters={lazyState.filters}
-            header={renderHeader()}
+            filters={primeFilters}
+            globalFilterFields={[
+              "plate_num_front",
+              "country_code_front",
+              "car_type",
+            ]}
             dataKey="id"
-            globalFilterFields={["Vehicle", "Station", "Type"]}
+            header={renderHeader()}
             emptyMessage="No data found."
             onRowClick={(e) => {
               setSelectedVehicle(e.data as VehicleList);
@@ -241,13 +281,14 @@ export default function CurrentMeasureTable(): JSX.Element {
           style={{ width: "10%", textAlign: "center" }}
           alignHeader="center"
         /> */}
-         <Column
-                         field="date_veh"
-                         header={t("time")}
-                         headerStyle={{ textAlign: "center" }}
-                         body={(rowData) => formatDate(rowData.date_veh)}
-                       />
-           {/* <Column
+            <Column
+              field="date_veh"
+              header={t("time")}
+              sortable
+              headerStyle={{ textAlign: "center"}}
+              body={(rowData) => formatDate(rowData.date_veh)}
+            />
+            {/* <Column
                          field="id"
                          header={t("violation_id")}
                          // filter
@@ -256,68 +297,82 @@ export default function CurrentMeasureTable(): JSX.Element {
                          headerStyle={{ textAlign: "center" }}
                          body={(rowData) => shortId(rowData.id)}
                        /> */}
-                       <Column
-                         field="plate_num_front"
-                         header={t("vehicle")}
-                         sortable
-                         // filter
-                         // filterPlaceholder="Search country"
-                         headerStyle={{ textAlign: "center" }}
-                         body={(rowData) => emptyTemplate(rowData.plate_num_front)}
-                       />
-                       <Column
-                         field="country_code_front"
-                         header={t("province")}
-                         // sortable
-                         headerStyle={{ textAlign: "center" }}
-                         body={(rowData) => emptyTemplate(rowData.country_code_front)}
-                       />
-                       <Column
-                         field="car_type"
-                         header={t("type")}
-                         // sortable
-                         headerStyle={{ textAlign: "center" }}
-                         body={(rowData) => emptyTemplate(rowData.car_type)}
-                       />
-                       <Column
-                         field="towt_kg"
-                         header={t("weight")}
-                         sortable
-                         headerStyle={{ textAlign: "center" }}
-                         body={(rowData) => formatT(rowData.towt_kg)}
-                       />
-                       <Column
-                         field="axles"
-                         header={t("axle")}
-                         sortable
-                         // filter
-                         // filterPlaceholder="Search Station"
-                         headerStyle={{ textAlign: "center" }}
-                          body={(rowData) => emptyTemplate(rowData.axles)}
-                       />
-                       <Column
-                         field="length"
-                         header={t("length")}
-                         sortable
-                         headerStyle={{ textAlign: "center" }}
-                         body={(rowData) => formatM(rowData.length)}
-                       />
-                       <Column
-                         field="speed"
-                         header={t("speed")}
-                         headerStyle={{ textAlign: "center" }}
-                         body={(rowData) => formatKm(rowData.speed)}
-                       />
-                         <Column
-                         field="towt_valid"
-                         header={t("status")}
-                        //  sortable
-                         // filter
-                         // filterPlaceholder="Search Station"
-                         headerStyle={{ textAlign: "center" }}
-                          body={(rowData) => emptyTemplate(rowData.towt_valid)}
-                       />
-              
+            <Column
+              field="plate_num_front"
+              header={t("vehicle")}
+              sortable
+              // filter
+              // filterPlaceholder="Search country"
+              headerStyle={{ textAlign: "center" }}
+              body={(rowData) => emptyTemplate(rowData.plate_num_front)}
+            />
+            <Column
+              field="country_code_front"
+              header={t("province")}
+              // sortable
+              headerStyle={{ textAlign: "center" }}
+              body={(rowData) => emptyTemplate(rowData.country_code_front)}
+            />
+            <Column
+              field="car_type"
+              header={t("type")}
+              sortable
+              headerStyle={{ textAlign: "center" }}
+              body={(rowData) => emptyTemplate(rowData.car_type)}
+            />
+            <Column
+              field="towt_kg"
+              header={t("weight")}
+              // sortable
+              headerStyle={{ textAlign: "center" }}
+              // body={(rowData) => formatT(rowData.towt_kg)}
+              body={(rowData) => {
+                // const date = rowData.date_veh;
+                const formatted = formatT(rowData.towt_kg);
+
+                // Example condition: if the date is today = green, else = gray
+                // const isToday =
+                //   new Date(date).toDateString() === new Date().toDateString();
+
+                return (
+                  <span data-testid={`weight-${rowData.id}`} style={{ color: rowData.isOverweight ? "rgb(255, 0, 0)" : "" }}>
+                    {formatted}
+                  </span>
+                );
+              }}
+            />
+            <Column
+              field="axles"
+              header={t("axle")}
+              sortable
+              // filter
+              // filterPlaceholder="Search Station"
+              headerStyle={{ textAlign: "center" }}
+              body={(rowData) => emptyTemplate(rowData.axles)}
+            />
+            <Column
+              field="length"
+              header={t("length")}
+              // sortable
+              headerStyle={{ textAlign: "center" }}
+              body={(rowData) => formatM(rowData.length)}
+            />
+            <Column
+              field="speed"
+              header={t("speed")}
+              // sortable
+              headerStyle={{ textAlign: "center" }}
+              body={(rowData) => formatKm(rowData.speed)}
+            />
+            <Column
+              field="towt_valid"
+              header={t("status")}
+              //  sortable
+              // filter
+              // filterPlaceholder="Search Station"
+              headerStyle={{ textAlign: "center" }}
+              body={(rowData) => emptyTemplate(rowData.towt_valid)}
+            />
           </DataTable>
         </CardContent>
       </Card>
