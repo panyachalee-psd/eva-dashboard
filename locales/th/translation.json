@@ -9,6 +9,8 @@
 
   "_comment_general": "this is for general section!!!",
   "Close": "ปิด",
+  "download_report": "ดาวน์โหลดรายงาน",
+  "loading_vehicle_data": "กำลังโหลดข้อมูลยานพาหนะ...",
 
 
    "_comment_wimdashboard": "this is for Wim Dashboard section!!!",
@@ -28,7 +30,7 @@
   "search_violations_by": "ค้นหาการละเมิดโดยป้ายทะเบียน, จังหวัด, ประเภท...",
   "violation_id": "รหัส",
   "vehicle": "รถยนต์",
-  "country_code": "จังหวัด",
+  "province": "จังหวัด",
   "type": "ประเภทรถ",
   "actual_weight": "น้ำหนักโดยประมาณ",
   "weight": "น้ำหนัก",
@@ -64,6 +66,8 @@
   "m": "m",
   "vehicle_capture": "รูปยานพาหนะที่จับภาพได้",
   "recent_syCaptured": "สถิติการจับภาพล่าสุด",
-  "timestamp": "เวลาที่บันทึก"
+  "timestamp": "เวลาที่บันทึก",
+  "actual": "ค่าที่ได้",
+  "no_vehicle_available": "ไม่มีข้อมูลยานพาหนะ"
 }
  

@@ -9,6 +9,8 @@
 
   "_comment_general": "this is for general section!!!",
   "Close": "Close",
+  "download_report": "Download Report",
+  "loading_vehicle_data": "Loading vehicle data...",
 
 
    "_comment_wimdashboard": "this is for Wim Dashboard section!!!",
@@ -41,8 +43,6 @@
   "search_readings_by": "Search readings by Plate Number, Province, Vehicle Type",
   "status": "Status",
   "recent_system_activity": "Recent System Activity",
-  "download_report": "Download Report",
-
 
   "_comment_vehicle_detail": "this is for Vehicle Detail section!!!",
   "vehicle_weight_information": "Vehicle Weight Information",
@@ -64,5 +64,7 @@
   "max_height": "Max Height",
   "m": "m",
   "vehicle_capture": "Vehicle Capture",
-  "recent_syCaptured": "Captured at weighing station • High resolution image available for download"
+  "recent_syCaptured": "Captured at weighing station • High resolution image available for download",
+  "actual": "Actual",
+  "no_vehicle_available": "No vehicle data available."
 }

@@ -11,7 +11,6 @@ import {
   ChevronRight,
   Scale,
 } from "lucide-react";
-// Shield, Radar
 import { Button } from "./ui/button";
 import { cn } from "./ui/utils";
 import { Tooltip, TooltipContent, TooltipProvider, TooltipTrigger } from "./ui/tooltip";

@@ -1,4 +1,12 @@
-import { Bell, Settings, User, Menu, LogOut, UserCircle, Globe } from "lucide-react";
+import {
+  Bell,
+  Settings,
+  User,
+  Menu,
+  LogOut,
+  UserCircle,
+  Globe,
+} from "lucide-react";
 import { Button } from "./ui/button";
 import { Avatar, AvatarFallback } from "./ui/avatar";
 import {
@@ -48,7 +56,12 @@ export function Header({ onMenuClick, isMobile }: HeaderProps) {
         </div>
 
         {!isMobile && (
-          <Button variant="ghost" size="sm" onClick={onMenuClick} className="ml-2">
+          <Button
+            variant="ghost"
+            size="sm"
+            onClick={onMenuClick}
+            className="ml-2"
+          >
             <Menu className="h-5 w-5" />
           </Button>
         )}
@@ -71,7 +84,11 @@ export function Header({ onMenuClick, isMobile }: HeaderProps) {
         {/* 🌐 Language Dropdown */}
         <DropdownMenu>
           <DropdownMenuTrigger asChild>
-            <Button variant="ghost" size="sm" className="flex items-center gap-1">
+            <Button
+              variant="ghost"
+              size="sm"
+              className="flex items-center gap-1"
+            >
               <Globe className="h-4 w-4" />
               <span className="hidden md:inline text-sm uppercase">
                 {i18n.language === "th" ? "TH" : "EN"}
@@ -79,15 +96,22 @@ export function Header({ onMenuClick, isMobile }: HeaderProps) {
             </Button>
           </DropdownMenuTrigger>
           <DropdownMenuContent align="end" className="w-28">
-            <DropdownMenuItem onClick={() => changeLanguage("en")}>🇬🇧 English</DropdownMenuItem>
-            <DropdownMenuItem onClick={() => changeLanguage("th")}>🇹🇭 ไทย</DropdownMenuItem>
+            <DropdownMenuItem onClick={() => changeLanguage("en")}>
+              🇬🇧 English
+            </DropdownMenuItem>
+            <DropdownMenuItem onClick={() => changeLanguage("th")}>
+              🇹🇭 ไทย
+            </DropdownMenuItem>
           </DropdownMenuContent>
         </DropdownMenu>
 
         {/* 👤 Profile Menu */}
         <DropdownMenu>
           <DropdownMenuTrigger asChild>
-            <Button variant="ghost" className="relative h-7 w-7 md:h-8 md:w-8 rounded-full p-0">
+            <Button
+              variant="ghost"
+              className="relative h-7 w-7 md:h-8 md:w-8 rounded-full p-0"
+            >
               <Avatar className="h-7 w-7 md:h-8 md:w-8">
                 <AvatarFallback className="bg-primary text-white">
                   <User className="h-3 w-3 md:h-4 md:w-4" />
@@ -99,8 +123,12 @@ export function Header({ onMenuClick, isMobile }: HeaderProps) {
           <DropdownMenuContent className="w-56" align="end" forceMount>
             <DropdownMenuLabel className="font-normal">
               <div className="flex flex-col space-y-1">
-                <p className="text-sm font-medium leading-none">{t("admin_user")}</p>
-                <p className="text-xs leading-none text-muted-foreground">admin@eva-system.com</p>
+                <p className="text-sm font-medium leading-none">
+                  {t("admin_user")}
+                </p>
+                <p className="text-xs leading-none text-muted-foreground">
+                  admin@eva-system.com
+                </p>
               </div>
             </DropdownMenuLabel>
 

@@ -20,38 +20,24 @@ interface Vehicle {
   created_at: string;
   photo_front_plate: string;
   photo_overview: string;
-  isOverweight: boolean,
+  isOverweight: boolean;
 }
-
-
 interface VehMeasuer {
-  speed: number,
-  speed_excess: number,
-  length: number,
-  length_excess: number,
-  towt_kg: number,
-  towr_kg: number,
-  towl_kg: number,
-  towt_excess: number,
-  towt_valid: string,
+  speed: number;
+  speed_excess: number;
+  length: number;
+  length_excess: number;
+  towt_kg: number;
+  towr_kg: number;
+  towl_kg: number;
+  towt_excess: number;
+  towt_valid: string;
 }
-
 interface VehicleDetailModalProps {
   isOpen: boolean;
   onClose: () => void;
   vehicle?: VehcleViolDetail | null; // ✅ allow null
 }
-
-// interface VehcleViolDetail extends Axel, VehMeasuer, Vehicle {
-//   vehicle_measures: Array<VehMeasuer>;
-//   axles: Array<Axel>;
-//   maximum: {
-//     max_length: number,
-//     max_speed: number
-//     max_weight: number
-//   }
-//   vehicle: Vehicle
-// }
 interface VehcleViolDetail {
   vehicle: Vehicle;
   vehicle_measures: VehMeasuer[];
@@ -62,7 +48,6 @@ interface VehcleViolDetail {
     max_weight: number;
   };
 }
-
 interface VehicleList {
   id: string;
   lane_number: string;
@@ -82,30 +67,18 @@ interface VehicleList {
   date_plate_rear: string;
   bool_tmd_anpr: boolean;
   created_at: string;
-  speed: number,
-  speed_excess: number,
-  length: number,
-  length_excess: number,
-  towt_kg: number,
-  towt_excess: number,
-  towt_valid: string
+  speed: number;
+  speed_excess: number;
+  length: number;
+  length_excess: number;
+  towt_kg: number;
+  towt_excess: number;
+  towt_valid: string;
 }
-
-// ✅ Define lazy state type
-// interface LazyState {
-//   first: number;
-//   rows: number;
-//   page: number;
-//   sortField?: string;
-//   sortOrder?: 1 | -1 | 0 | null | undefined;
-//   filters: Record<string, unknown>;
-// }
-
 interface FilterMeta {
   value: string | number | null;
-  matchMode: typeof FilterMatchMode[keyof typeof FilterMatchMode];
+  matchMode: (typeof FilterMatchMode)[keyof typeof FilterMatchMode];
 }
-
 interface LazyState {
   first: number;
   rows: number;
@@ -120,24 +93,31 @@ interface LazyState {
     [key: string]: FilterMeta | undefined; // allow dynamic keys
   };
 }
- 
 interface TraffViolation {
-  dateTime: string,
-  vehicle_count: number,
-  violations_count: number
+  dateTime: string;
+  vehicle_count: number;
+  violations_count: number;
 }
-
 interface WeightDistri {
-  weight_range: string,
-  count: number
+  weight_range: string;
+  count: number;
+}
+interface WimSummary {
+  total: number;
+  overweight_count: number;
+  overweight_percentage: number;
+  total_weight: number;
+  average_speed: number;
+  average_total_weight: number;
 }
 
-interface WimSummary {
-  total: number,
-  overweight_count: number,
-  overweight_percentage: number,
-  total_weight: number,
-  average_speed: number,
-  average_total_weight: number
-}
-export { VehicleDetailModalProps, VehcleViolDetail, LazyState, VehicleList, FilterMeta, TraffViolation, WeightDistri, WimSummary };
+export {
+  VehicleDetailModalProps,
+  VehcleViolDetail,
+  LazyState,
+  VehicleList,
+  FilterMeta,
+  TraffViolation,
+  WeightDistri,
+  WimSummary,
+};

@@ -121,9 +121,6 @@ export default function ViolatedTable(): JSX.Element {
     sortOrder: undefined,
     filters: {
       global: { value: null, matchMode: FilterMatchMode.CONTAINS },
-      // plate_num_front: { value: null, matchMode: FilterMatchMode.CONTAINS },
-      // vehicleType: { value: null, matchMode: FilterMatchMode.EQUALS },
-      // speed: { value: null, matchMode: FilterMatchMode.EQUALS },
     },
   });
 
@@ -132,9 +129,7 @@ export default function ViolatedTable(): JSX.Element {
   );
   const [isModalOpen, setIsModalOpen] = useState(false);
 
-  // -----------------------------
   // Load data from API
-  // -----------------------------
   const loadViolateVehicle = useCallback(async () => {
     setLoading(true);
     const { data, total } = await fetchViolVehicleFromApi({
@@ -159,9 +154,7 @@ export default function ViolatedTable(): JSX.Element {
     loadViolateVehicle();
   }, [loadViolateVehicle]);
 
-  // -----------------------------
   // Handlers
-  // -----------------------------
   const onPage = (event: DataTablePageEvent) => {
     setLazyState((prev) => ({
       ...prev,
@@ -218,18 +211,14 @@ export default function ViolatedTable(): JSX.Element {
     }));
   };
 
-  // -----------------------------
   // Map LazyState.filters to DataTableFilterMeta
-  // -----------------------------
   const primeFilters: DataTableFilterMeta = Object.fromEntries(
     Object.entries(lazyState.filters)
       .filter(([_, f]) => f !== undefined)
       .map(([key, f]) => [key, { value: f!.value, matchMode: f!.matchMode }]),
   ) as DataTableFilterMeta;
 
-  // -----------------------------
   // Search Header
-  // -----------------------------
   const renderHeader = () => (
     <div className="w-full">
       <IconField iconPosition="left">
@@ -255,9 +244,7 @@ export default function ViolatedTable(): JSX.Element {
     </div>
   );
 
-  // -----------------------------
   // Render
-  // -----------------------------
   return (
     <>
       <Card>
@@ -364,211 +351,3 @@ export default function ViolatedTable(): JSX.Element {
     </>
   );
 }
-
-// export default function ViolatedTable(): JSX.Element {
-//   // const [customers, setCustomers] = useState<Customer[]>([]);
-//   const [vehicles, setVehicle] = useState<VehicleList[]>([]);
-//   const [totalRecords, setTotalRecords] = useState<number>(0);
-//   const [loading, setLoading] = useState<boolean>(false);
-
-//   const [lazyState, setLazyState] = useState<LazyState>({
-//     first: 0,
-//     rows: 10,
-//     page: 0,
-//     sortField: undefined,
-//     sortOrder: undefined,
-//     filters: {
-//       global: { value: null, matchMode: FilterMatchMode.CONTAINS },
-//       plate: { value: null, matchMode: FilterMatchMode.CONTAINS },
-//       vehicleType: { value: null, matchMode: FilterMatchMode.EQUALS },
-//       speed: { value: null, matchMode: FilterMatchMode.EQUALS },
-//     },
-//   });
-//   const [selectedVehicle, setSelectedVehicle] = useState<VehicleList | null>(null);
-//   const [isModalOpen, setIsModalOpen] = useState(false);
-
-// const loadViolateVehicle = useCallback(async () => {
-//   setLoading(true);
-
-//   const { data, total } = await fetchViolVehicleFromApi({
-//     page: lazyState.page + 1,
-//     rows: lazyState.rows,
-//     sortField: lazyState.sortField,
-//     sortOrder: lazyState.sortOrder,
-//     filters: lazyState.filters,
-//   });
-
-//   setVehicle(data);
-//   setTotalRecords(total);
-//   setLoading(false);
-// }, [
-//   lazyState.page,
-//   lazyState.rows,
-//   lazyState.sortField,
-//   lazyState.sortOrder,
-//   lazyState.filters
-// ]);
-
-// useEffect(() => {
-//   loadViolateVehicle();
-// }, [loadViolateVehicle]);
-//   // lazyState.filters.global?.value
-
-//   // ✅ DataTable event handlers
-//   const onPage = (event: DataTablePageEvent) => setLazyState((prev) => ({ ...prev, ...event }));
-//   const onSort = (event: DataTableSortEvent) => setLazyState((prev) => ({ ...prev, ...event }));
-//   const onFilter = (event: DataTableFilterEvent) =>
-//     setLazyState((prev) => ({ ...prev, ...event, first: 0 }));
-
-//   const { t } = useTranslation();
-
-//   // ✅ Global search
-//   const renderHeader = () => (
-//     <div className="w-full">
-//       <IconField iconPosition="left">
-//         <InputIcon className="pi pi-search" />
-//         <InputText
-//           variant="filled"
-//           className="w-full"
-//           onInput={(e: React.ChangeEvent<HTMLInputElement>) => {
-//             setLazyState((prev) => ({
-//               ...prev,
-//               filters: {
-//                 ...prev.filters,
-//                 global: { value: e.target.value, matchMode: FilterMatchMode.CONTAINS },
-//               },
-//               first: 0,
-//               page: 0,
-//             }));
-//           }}
-//           placeholder={t("search_violations_by")}
-//         />
-//       </IconField>
-//     </div>
-//   );
-
-//   return (
-//     // <div className="card">
-//     <>
-//       <Card>
-//         <CardContent>
-//           <DataTable
-//             value={vehicles}
-//             paginator
-//             rows={lazyState.rows}
-//             totalRecords={totalRecords}
-//             first={lazyState.first}
-//             lazy
-//             loading={loading}
-//             onPage={onPage}
-//             onSort={onSort}
-//             onFilter={onFilter}
-//             sortField={lazyState.sortField}
-//             sortOrder={lazyState.sortOrder}
-//             // filters={lazyState.filters}
-//             header={renderHeader()}
-//             dataKey="id"
-//             globalFilterFields={["Vehicle", "Station", "Type"]}
-//             emptyMessage="No data found."
-//             onRowClick={(e) => {
-//               setSelectedVehicle(e.data as VehicleList);
-//               setIsModalOpen(true);
-//             }}
-//           >
-//             {/* <Column
-//           // field="id"
-//           body={(_, options) =>
-//     vehicles.length > 0 ? lazyState.first + options.rowIndex + 1 : "-"}
-//           header="ID"
-//           style={{ width: "10%", textAlign: "center" }}
-//           alignHeader="center"
-//         /> */}
-//             <Column
-//               field="id"
-//               header={t("violation_id")}
-//               // filter
-//               sortable
-//               // filterPlaceholder="Search vehicle"
-//               headerStyle={{ textAlign: "center" }}
-//               body={(rowData) => shortId(rowData.id)}
-//             />
-//             <Column
-//               field="plate_num_front"
-//               header={t("vehicle")}
-//               sortable
-//               // filter
-//               // filterPlaceholder="Search country"
-//               headerStyle={{ textAlign: "center" }}
-//               body={(rowData) => emptyTemplate(rowData.plate_num_front)}
-//             />
-//             <Column
-//               field="country_code_front"
-//               header={t("province")}
-//               // sortable
-//               headerStyle={{ textAlign: "center" }}
-//               body={(rowData) => emptyTemplate(rowData.country_code_front)}
-//             />
-//             <Column
-//               field="car_type"
-//               header={t("type")}
-//               // sortable
-//               headerStyle={{ textAlign: "center" }}
-//               body={(rowData) => emptyTemplate(rowData.car_type)}
-//             />
-//             <Column
-//               field="towt_kg"
-//               header={t("actual_weight")}
-//               sortable
-//               headerStyle={{ textAlign: "center" }}
-//               body={(rowData) => formatT(rowData.towt_kg)}
-//             />
-//             <Column
-//               field="axles"
-//               header={t("axle")}
-//               sortable
-//               // filter
-//               // filterPlaceholder="Search Station"
-//               headerStyle={{ textAlign: "center" }}
-//                body={(rowData) => emptyTemplate(rowData.axles)}
-//             />
-//             <Column
-//               field="length"
-//               header={t("length")}
-//               sortable
-//               headerStyle={{ textAlign: "center" }}
-//               body={(rowData) => formatM(rowData.length)}
-//             />
-//             <Column
-//               field="speed"
-//               header={t("speed")}
-//               headerStyle={{ textAlign: "center" }}
-//               body={(rowData) => formatKm(rowData.speed)}
-//             />
-//             <Column
-//               field="date_veh"
-//               header={t("time")}
-//               headerStyle={{ textAlign: "center" }}
-//               body={(rowData) => timeAgo(rowData.date_veh)}
-//             />
-//             {/* <Column
-//               field="severity"
-//               header={t("severity")}
-//               headerStyle={{ textAlign: "center" }}
-//               body={(rowData) => emptyTemplate(rowData.severity)}
-//             /> */}
-//           </DataTable>
-//         </CardContent>
-//       </Card>
-
-//       <VehicleDetailModal
-//         isOpen={isModalOpen}
-//         onClose={() => setIsModalOpen(false)}
-//         vehicle={selectedVehicle}
-//         width="w-full max-w-[1700px]"
-//         height="max-h-[80vh]"
-//         borderColor=""
-//       />
-
-//     </>
-//   );
-// }

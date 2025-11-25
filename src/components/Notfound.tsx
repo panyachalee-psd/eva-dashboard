@@ -9,16 +9,7 @@ export default function NotFound() {
         Oops! The page you're looking for doesn't exist.
       </p>
 
-      <p className="text-gray-500 mt-1">
-        It might have been moved or deleted.
-      </p>
-
-      {/* <a
-        href="/"
-        className="mt-6 px-6 py-3 bg-blue-600 text-white rounded-xl shadow hover:bg-blue-700 transition"
-      >
-        Go Back Home
-      </a> */}
+      <p className="text-gray-500 mt-1">It might have been moved or deleted.</p>
     </div>
   );
 }

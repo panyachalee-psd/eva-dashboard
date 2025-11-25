@@ -12,13 +12,6 @@ import { WeatherSensorDashboard } from "../components/WeatherSensorDashboard";
 import { RadarDashboard } from "../components/RadarDashboard";
 import { UserDashboard } from "../components/UserDashboard";
 import { ProjectDashboard } from "../components/ProjectDashboard";
-// import { DataProvider } from "../context/DataContext";
-// import { DataProvider } from "./context/DataContextAll";
-// import { UserProvider } from "../context/UserContext";
-// import { ProjectProvider } from "../context/ProjectContext";
-// import { NotificationProvider } from "../context/NotificationContext";
-// import NotificationPanel from "./components/NotificationPanel";
-// import UsersTable from "../components/ApiTestProject";
 
 export default function DashboardLayout() {
   const [activeTab, setActiveTab] = useState("overview");
@@ -65,8 +58,6 @@ export default function DashboardLayout() {
         return <UserDashboard />;
       case "project":
         return <ProjectDashboard />;
-    //   case "testapi":
-    //     return <UsersTable />;
       default:
         return <OverviewDashboard />;
     }
@@ -114,79 +105,5 @@ export default function DashboardLayout() {
         </main>
       </div>
     </div>
-    //   <DataProvider>
-    //   <div className="h-screen flex flex-col bg-background">
-    //     <Header
-    //       onMenuClick={() =>
-    //         isMobile
-    //           ? setMobileSidebarOpen(!mobileSidebarOpen)
-    //           : setSidebarCollapsed(!sidebarCollapsed)
-    //       }
-    //       isMobile={isMobile}
-    //     />
-    //     <div className="flex flex-1 overflow-hidden relative">
-    //       <Sidebar
-    //         activeTab={activeTab}
-    //         onTabChange={handleTabChange}
-    //         collapsed={sidebarCollapsed}
-    //         isMobile={isMobile}
-    //         mobileOpen={mobileSidebarOpen}
-    //         onCollapse={setSidebarCollapsed}
-    //         onMobileClose={() => setMobileSidebarOpen(false)}
-    //       />
-    //       {isMobile && mobileSidebarOpen && (
-    //         <div
-    //           className="fixed inset-0 bg-black/50 z-40 md:hidden"
-    //           onClick={() => setMobileSidebarOpen(false)}
-    //         />
-    //       )}
-    //       <main
-    //         className={`flex-1 overflow-auto transition-all duration-300 ${
-    //           isMobile ? "ml-0" : sidebarCollapsed ? "ml-16" : "ml-64"
-    //         }`}
-    //       >
-    //         <div className="p-4 md:p-6">{renderContent()}</div>
-    //       </main>
-    //     </div>
-    //      {/* <NotificationPanel /> */}
-    //   </div>
-    // </DataProvider>
-
-    //  <UserProvider>
-    //   <ProjectProvider>
-    //     <NotificationProvider>
-    //       <div className="h-screen flex flex-col bg-background">
-    //   <Header
-    //     onMenuClick={() => isMobile ? setMobileSidebarOpen(!mobileSidebarOpen) : setSidebarCollapsed(!sidebarCollapsed)}
-    //     isMobile={isMobile}
-    //   />
-    //   <div className="flex flex-1 overflow-hidden relative">
-    //     <Sidebar
-    //       activeTab={activeTab}
-    //       onTabChange={handleTabChange}
-    //       collapsed={sidebarCollapsed}
-    //       isMobile={isMobile}
-    //       mobileOpen={mobileSidebarOpen}
-    //       onCollapse={setSidebarCollapsed}
-    //       onMobileClose={() => setMobileSidebarOpen(false)}
-    //     />
-    //     {isMobile && mobileSidebarOpen && (
-    //       <div
-    //         className="fixed inset-0 bg-black/50 z-40 md:hidden"
-    //         onClick={() => setMobileSidebarOpen(false)}
-    //       />
-    //     )}
-    //     <main className={`flex-1 overflow-auto transition-all duration-300 ${
-    //       isMobile ? 'ml-0' : sidebarCollapsed ? 'ml-16' : 'ml-64'
-    //     }`}>
-    //       <div className="p-4 md:p-6">
-    //         {renderContent()}
-    //       </div>
-    //     </main>
-    //   </div>
-    // </div>
-    //     </NotificationProvider>
-    //   </ProjectProvider>
-    // </UserProvider>
   );
 }

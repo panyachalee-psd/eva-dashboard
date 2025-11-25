@@ -40,7 +40,9 @@ describe("<WIMDashboardOverall />", () => {
     render(<WIMDashboardOverall />);
 
     // Wait for StatCards to appear
-    await waitFor(() => expect(screen.getByText("avg_vehicle_weight")).toBeInTheDocument());
+    await waitFor(() =>
+      expect(screen.getByText("avg_vehicle_weight")).toBeInTheDocument(),
+    );
 
     // Titles
     expect(screen.getByText("avg_vehicle_weight")).toBeInTheDocument();
@@ -60,30 +62,29 @@ describe("<WIMDashboardOverall />", () => {
     render(<WIMDashboardOverall />);
 
     await waitFor(() =>
-      expect(screen.getByText(/Error loading dashboard/i)).toBeInTheDocument()
+      expect(screen.getByText(/Error loading dashboard/i)).toBeInTheDocument(),
     );
     expect(screen.getByText(/Network Error/)).toBeInTheDocument();
   });
 
   test("applies correct changeType based on overweight_percentage", async () => {
     // overweight_percentage < 10 → positive
-    mockedAxios.get.mockResolvedValue({ data: { ...mockData, overweight_percentage: 5 } });
+    mockedAxios.get.mockResolvedValue({
+      data: { ...mockData, overweight_percentage: 5 },
+    });
     render(<WIMDashboardOverall />);
     await waitFor(() =>
-      expect(screen.getByText("violations_detected")).toBeInTheDocument()
+      expect(screen.getByText("violations_detected")).toBeInTheDocument(),
     );
-    // The component does not render changeType as text, so we assume StatCard uses it internally
-    // You could add a data attribute in StatCard for testing:
-    // <div data-change-type={changeType}>...</div>
-    // Then assert it here:
-    // expect(screen.getByTestId("violations_detected")).toHaveAttribute("data-change-type", "positive");
   });
 
   test("applies negative changeType when overweight_percentage >= 10", async () => {
-    mockedAxios.get.mockResolvedValue({ data: { ...mockData, overweight_percentage: 15 } });
+    mockedAxios.get.mockResolvedValue({
+      data: { ...mockData, overweight_percentage: 15 },
+    });
     render(<WIMDashboardOverall />);
     await waitFor(() =>
-      expect(screen.getByText("violations_detected")).toBeInTheDocument()
+      expect(screen.getByText("violations_detected")).toBeInTheDocument(),
     );
     // Same note: add data attribute in StatCard to assert changeType if needed
   });
@@ -93,49 +94,9 @@ describe("<WIMDashboardOverall />", () => {
     render(<WIMDashboardOverall />);
     await waitFor(() => screen.getByText("avg_vehicle_weight"));
 
-    const cards = screen.getAllByText(/avg_vehicle_weight|vehicles_today|violations_detected|avg_vehicle_speed/);
+    const cards = screen.getAllByText(
+      /avg_vehicle_weight|vehicles_today|violations_detected|avg_vehicle_speed/,
+    );
     expect(cards.length).toBe(4);
   });
 });
-
-// import { render, screen } from "@testing-library/react";
-// import "@testing-library/jest-dom";
-// import { WIMDashboardOverall } from "./DashboardOverall";
-
-// jest.mock("react-i18next", () => ({
-//   useTranslation: () => ({
-//     t: (key: string) => key,
-//   }),
-// }));
-
-// describe("<WIMDashboardOverall />", () => {
-//   test("renders all stat cards with correct titles and values", () => {
-//     render(<WIMDashboardOverall />);
-
-//     // Titles (translated)
-//     expect(screen.getByText("avg_vehicle_weight")).toBeInTheDocument();
-//     expect(screen.getByText("vehicles_today")).toBeInTheDocument();
-//     expect(screen.getByText("violations_detected")).toBeInTheDocument();
-//     expect(screen.getByText("avg_vehicle_speed")).toBeInTheDocument();
-
-//     // Values
-//     expect(screen.getByText("18")).toBeInTheDocument();
-//     expect(screen.getByText("3,226")).toBeInTheDocument();
-//     expect(screen.getByText("108")).toBeInTheDocument();
-//     expect(screen.getByText("98.5%")).toBeInTheDocument();
-
-//     // Changes / Subtexts
-//     expect(screen.getByText("+2 new stations")).toBeInTheDocument();
-//     expect(screen.getByText("+18% from yesterday")).toBeInTheDocument();
-//     expect(screen.getByText("3.3% violation rate")).toBeInTheDocument();
-//     expect(screen.getByText("Within spec range")).toBeInTheDocument();
-//   });
-
-//   test("renders 4 StatCards", () => {
-//     render(<WIMDashboardOverall />);
-
-//     // StatCard renders a heading (title), so count by title text tags
-//     const cards = screen.getAllByText(/avg_vehicle_weight|vehicles_today|violations_detected|avg_vehicle_speed/);
-//     expect(cards.length).toBe(4);
-//   });
-// });

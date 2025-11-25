@@ -11,14 +11,17 @@ export function WIMDashboard() {
   return (
     <div className="space-y-6">
       <div>
-        <h2 className="text-2xl font-bold text-foreground mb-2">{t("weight_in_motion_system")}</h2>
-        <p className="text-muted-foreground">{t("subheader_monitor_vehicle")}</p>
+        <h2 className="text-2xl font-bold text-foreground mb-2">
+          {t("weight_in_motion_system")}
+        </h2>
+        <p className="text-muted-foreground">
+          {t("subheader_monitor_vehicle")}
+        </p>
       </div>
 
       {/* WIM DashboardOverall */}
       <WIMDashboardOverall />
 
-      
       {/* WIM StatOverall */}
       <WIMStatOverall />
 
@@ -38,7 +41,11 @@ export function WIMDashboard() {
           <div className="flex justify-between">
             <CardTitle>{t("recent_weight_readings")}</CardTitle>
             <div>
-              <Button size="sm" className="hidden sm:flex" startIcon="pi-folder-open">
+              <Button
+                size="sm"
+                className="hidden sm:flex"
+                startIcon="pi-folder-open"
+              >
                 {t("download_report")}
               </Button>
             </div>

@@ -26,7 +26,7 @@ export function WIMDashboardOverall() {
     async function fetchDashboardData() {
       try {
         const response = await axios.get<WimSummary>(
-          "http://85.204.247.82:3007/dashboard/summary"
+          "http://85.204.247.82:3007/dashboard/summary",
         );
 
         setStats(response.data);
@@ -46,9 +46,9 @@ export function WIMDashboardOverall() {
   }, []);
 
   function formatT(value: number) {
-  if (value == null) return "-";
-  return `${value / 1000} t`;
-}
+    if (value == null) return "-";
+    return `${value / 1000} t`;
+  }
 
   if (loading) return <p>Loading dashboard...</p>;
   if (error) return <p>Error loading dashboard: {error.message}</p>;
@@ -59,29 +59,25 @@ export function WIMDashboardOverall() {
         <StatCard
           title={t("avg_vehicle_weight")}
           value={formatT(stats.average_total_weight)}
-        //   change={`Overweight: ${stats.overweight_count}`}
-        //   changeType={stats.overweight_percentage > 5 ? "negative" : "positive"}
           icon={Scale}
         />
         <StatCard
           title={t("vehicles_today")}
           value={stats.total}
-        //   change={`Overweight %: ${stats.overweight_percentage.toFixed(1)}%`}
-        //   changeType="positive"
           icon={Truck}
         />
         <StatCard
           title={t("violations_detected")}
           value={stats.overweight_count}
           change={`${stats.overweight_percentage.toFixed(1)}% violation rate`}
-          changeType={stats.overweight_percentage >= 10 ? "negative" : "positive"}
+          changeType={
+            stats.overweight_percentage >= 10 ? "negative" : "positive"
+          }
           icon={AlertTriangle}
         />
         <StatCard
           title={t("avg_vehicle_speed")}
           value={`${stats.average_speed.toFixed(1)} km/h`}
-        //   change="Within spec range"
-        //   changeType="positive"
           icon={Gauge}
         />
       </div>

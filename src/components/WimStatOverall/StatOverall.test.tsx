@@ -3,6 +3,22 @@ import { WIMStatOverall } from "./StatOverall";
 import axios from "axios";
 import React from "react";
 
+interface WeightBin {
+  weight_range: string;
+  count: number;
+}
+
+interface CompressedBin {
+  range: string;
+  count: number;
+}
+
+interface TrafficPoint {
+  time: string;
+  vehicles: number;
+  violations: number;
+}
+
 jest.mock("axios");
 const mockedAxios = axios as jest.Mocked<typeof axios>;
 
@@ -12,25 +28,21 @@ jest.mock("react-i18next", () => ({
   }),
 }));
 
-// const trafficData = [
-//   { dateTime: "2025-01-01T08:00:00Z", vehicle_count: 10, violations_count: 2 },
-//   { dateTime: "2025-01-01T09:00:00Z", vehicle_count: 5, violations_count: 1 },
-// ];
-
-
-
-// Mock Recharts components
-let barChartCalls: any[][] = [];
-let lineChartCalls: any[][] = [];
+// Instead of any[][]
+let barChartCalls: CompressedBin[][] = [];
+let lineChartCalls: TrafficPoint[][] = [];
 
 jest.mock("recharts", () => {
   const React = require("react");
   return {
-    BarChart: (props: { data: any[]; children: React.ReactNode }) => {
+    BarChart: (props: { data: CompressedBin[]; children: React.ReactNode }) => {
       barChartCalls.push(props.data);
       return <div data-testid="bar-chart">{props.children}</div>;
     },
-    LineChart: (props: { data?: any[]; children: React.ReactNode }) => {
+    LineChart: (props: {
+      data?: TrafficPoint[];
+      children: React.ReactNode;
+    }) => {
       if (props.data) lineChartCalls.push(props.data);
       return <div data-testid="line-chart">{props.children}</div>;
     },
@@ -47,7 +59,7 @@ jest.mock("recharts", () => {
 });
 
 // Helper for creating weight bins
-const makeBins = (count: number) =>
+const makeBins = (count: number): WeightBin[] =>
   Array.from({ length: count }).map((_, i) => ({
     weight_range: `${i * 1000}-${i * 1000 + 999}`,
     count: i + 1,
@@ -64,8 +76,8 @@ describe("WIMStatOverall — TypeScript tests with proper act", () => {
     mockedAxios.get.mockImplementation(
       () =>
         new Promise((resolve) =>
-          setTimeout(() => resolve({ data: { data: [] } }), 50)
-        )
+          setTimeout(() => resolve({ data: { data: [] } }), 50),
+        ),
     );
 
     await act(async () => {
@@ -92,7 +104,7 @@ describe("WIMStatOverall — TypeScript tests with proper act", () => {
 
     await waitFor(() => {
       const weightChart = barChartCalls.find((data) =>
-        data.some((item) => "range" in item)
+        data.some((item) => "range" in item),
       );
       expect(weightChart).toBeDefined();
       expect(weightChart!.length).toBe(10);
@@ -123,7 +135,7 @@ describe("WIMStatOverall — TypeScript tests with proper act", () => {
 
     await waitFor(() => {
       const weightChart = barChartCalls.find((data) =>
-        data.some((item) => "range" in item)
+        data.some((item) => "range" in item),
       );
       expect(weightChart!.length).toBe(5);
       bins.forEach((item, idx) => {
@@ -144,7 +156,7 @@ describe("WIMStatOverall — TypeScript tests with proper act", () => {
 
     await waitFor(() => {
       const weightChart = barChartCalls.find((data) =>
-        data.some((item) => "range" in item)
+        data.some((item) => "range" in item),
       );
       expect(weightChart!.map((x) => x.range)).toEqual([
         "0-1000",
@@ -163,7 +175,7 @@ describe("WIMStatOverall — TypeScript tests with proper act", () => {
     });
 
     await waitFor(() =>
-      expect(screen.queryByText(/loading/i)).not.toBeInTheDocument()
+      expect(screen.queryByText(/loading/i)).not.toBeInTheDocument(),
     );
 
     expect(screen.getByText(/weight_distribution/i)).toBeInTheDocument();
@@ -171,15 +183,23 @@ describe("WIMStatOverall — TypeScript tests with proper act", () => {
   });
 
   it("formats traffic hourly time correctly", async () => {
-  const trafficData = [
-  { dateTime: "2025-01-01T08:00:00Z", vehicle_count: 10, violations_count: 2 },
-  { dateTime: "2025-01-01T09:00:00Z", vehicle_count: 5, violations_count: 1 },
-];
+    const trafficData = [
+      {
+        dateTime: "2025-01-01T08:00:00Z",
+        vehicle_count: 10,
+        violations_count: 2,
+      },
+      {
+        dateTime: "2025-01-01T09:00:00Z",
+        vehicle_count: 5,
+        violations_count: 1,
+      },
+    ];
 
-   const expectedTraffic = [
-  { time: "15:00", vehicles: 10, violations: 2 },
-  { time: "16:00", vehicles: 5, violations: 1 },
-];
+    const expectedTraffic: TrafficPoint[] = [
+      { time: "15:00", vehicles: 10, violations: 2 },
+      { time: "16:00", vehicles: 5, violations: 1 },
+    ];
 
     mockedAxios.get
       .mockResolvedValueOnce({ data: { data: trafficData } }) // traffic
@@ -191,18 +211,10 @@ describe("WIMStatOverall — TypeScript tests with proper act", () => {
 
     await waitFor(() => {
       const trafficChart = lineChartCalls.find((data) =>
-        data.some((item) => "time" in item)
+        data.some((item) => "time" in item),
       );
       expect(trafficChart).toBeDefined();
-
-      // Adjusted keys to match your component's output
-    //   expect(trafficChart).toEqual(
-    //     expect.arrayContaining([
-    //       expect.objectContaining({ time: "08:00", vehicles: 10 }),
-    //       expect.objectContaining({ time: "09:00", vehicles: 5 }),
-    //     ])
-    //   );
-    expect(trafficChart).toEqual(expect.arrayContaining(expectedTraffic));
+      expect(trafficChart).toEqual(expect.arrayContaining(expectedTraffic));
     });
   });
 });

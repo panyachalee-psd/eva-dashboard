@@ -77,10 +77,6 @@ function formatKm(value: number) {
   return `${value} km/h`;
 }
 
-// export const formatDate = (dateString: string) => {
-//   const date = new Date(dateString); // Convert the ISO string to Date object
-//   return format(date, "yyyy-MM-dd HH:mm:ss"); // Format the date
-// };
 export const formatDate = (dateString: string | undefined | null) => {
   if (!dateString) return "-"; // fallback for empty/undefined/null
 
@@ -111,9 +107,6 @@ export default function CurrentMeasureTable(): JSX.Element {
     sortOrder: undefined,
     filters: {
       global: { value: null, matchMode: FilterMatchMode.CONTAINS },
-      // plate: { value: null, matchMode: FilterMatchMode.CONTAINS },
-      // vehicleType: { value: null, matchMode: FilterMatchMode.EQUALS },
-      // speed: { value: null, matchMode: FilterMatchMode.EQUALS },
     },
   });
   const [selectedVehicle, setSelectedVehicle] = useState<VehicleList | null>(
@@ -242,7 +235,6 @@ export default function CurrentMeasureTable(): JSX.Element {
   );
 
   return (
-    // <div className="card">
     <>
       <Card>
         <CardContent>
@@ -273,43 +265,23 @@ export default function CurrentMeasureTable(): JSX.Element {
               setIsModalOpen(true);
             }}
           >
-            {/* <Column
-          // field="id"
-          body={(_, options) =>
-    vehicles.length > 0 ? lazyState.first + options.rowIndex + 1 : "-"}
-          header="ID"
-          style={{ width: "10%", textAlign: "center" }}
-          alignHeader="center"
-        /> */}
             <Column
               field="date_veh"
               header={t("time")}
               sortable
-              headerStyle={{ textAlign: "center"}}
+              headerStyle={{ textAlign: "center" }}
               body={(rowData) => formatDate(rowData.date_veh)}
             />
-            {/* <Column
-                         field="id"
-                         header={t("violation_id")}
-                         // filter
-                         sortable
-                         // filterPlaceholder="Search vehicle"
-                         headerStyle={{ textAlign: "center" }}
-                         body={(rowData) => shortId(rowData.id)}
-                       /> */}
             <Column
               field="plate_num_front"
               header={t("vehicle")}
               sortable
-              // filter
-              // filterPlaceholder="Search country"
               headerStyle={{ textAlign: "center" }}
               body={(rowData) => emptyTemplate(rowData.plate_num_front)}
             />
             <Column
               field="country_code_front"
               header={t("province")}
-              // sortable
               headerStyle={{ textAlign: "center" }}
               body={(rowData) => emptyTemplate(rowData.country_code_front)}
             />
@@ -323,19 +295,17 @@ export default function CurrentMeasureTable(): JSX.Element {
             <Column
               field="towt_kg"
               header={t("weight")}
-              // sortable
               headerStyle={{ textAlign: "center" }}
-              // body={(rowData) => formatT(rowData.towt_kg)}
               body={(rowData) => {
-                // const date = rowData.date_veh;
                 const formatted = formatT(rowData.towt_kg);
 
-                // Example condition: if the date is today = green, else = gray
-                // const isToday =
-                //   new Date(date).toDateString() === new Date().toDateString();
-
                 return (
-                  <span data-testid={`weight-${rowData.id}`} style={{ color: rowData.isOverweight ? "rgb(255, 0, 0)" : "" }}>
+                  <span
+                    data-testid={`weight-${rowData.id}`}
+                    style={{
+                      color: rowData.isOverweight ? "rgb(255, 0, 0)" : "",
+                    }}
+                  >
                     {formatted}
                   </span>
                 );
@@ -345,31 +315,24 @@ export default function CurrentMeasureTable(): JSX.Element {
               field="axles"
               header={t("axle")}
               sortable
-              // filter
-              // filterPlaceholder="Search Station"
               headerStyle={{ textAlign: "center" }}
               body={(rowData) => emptyTemplate(rowData.axles)}
             />
             <Column
               field="length"
               header={t("length")}
-              // sortable
               headerStyle={{ textAlign: "center" }}
               body={(rowData) => formatM(rowData.length)}
             />
             <Column
               field="speed"
               header={t("speed")}
-              // sortable
               headerStyle={{ textAlign: "center" }}
               body={(rowData) => formatKm(rowData.speed)}
             />
             <Column
               field="towt_valid"
               header={t("status")}
-              //  sortable
-              // filter
-              // filterPlaceholder="Search Station"
               headerStyle={{ textAlign: "center" }}
               body={(rowData) => emptyTemplate(rowData.towt_valid)}
             />

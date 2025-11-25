@@ -74,8 +74,20 @@ const mockVehicleDetail: VehcleViolDetail = {
     },
   ],
   axles: [
-    { axle_no: 1, weight_excess: 0, weight: 1200, weight_left: 600, weight_right: 600 },
-    { axle_no: 2, weight_excess: 0, weight: 900, weight_left: 450, weight_right: 450 },
+    {
+      axle_no: 1,
+      weight_excess: 0,
+      weight: 1200,
+      weight_left: 600,
+      weight_right: 600,
+    },
+    {
+      axle_no: 2,
+      weight_excess: 0,
+      weight: 900,
+      weight_left: 450,
+      weight_right: 450,
+    },
   ],
   maximum: {
     max_length: 0,
@@ -90,14 +102,28 @@ describe("VehicleDetailModal", () => {
   });
 
   it("renders modal title with vehicle plate number", async () => {
-    render(<VehicleDetailModal isOpen={true} onClose={() => {}} vehicle={mockVehicle} />);
+    render(
+      <VehicleDetailModal
+        isOpen={true}
+        onClose={() => {}}
+        vehicle={mockVehicle}
+      />,
+    );
     await waitFor(() =>
-      expect(screen.getByText(/Vehicle Weight Information - 2DHK895/i)).toBeInTheDocument()
+      expect(
+        screen.getByText(/Vehicle Weight Information - 2DHK895/i),
+      ).toBeInTheDocument(),
     );
   });
 
   it("renders basic information cards", async () => {
-    render(<VehicleDetailModal isOpen={true} onClose={() => {}} vehicle={mockVehicle} />);
+    render(
+      <VehicleDetailModal
+        isOpen={true}
+        onClose={() => {}}
+        vehicle={mockVehicle}
+      />,
+    );
     await waitFor(() => {
       expect(screen.getByText(/BEL/i)).toBeInTheDocument();
       expect(screen.getByText(/Truck/i)).toBeInTheDocument();
@@ -105,7 +131,13 @@ describe("VehicleDetailModal", () => {
   });
 
   it("renders measurements cards", async () => {
-    render(<VehicleDetailModal isOpen={true} onClose={() => {}} vehicle={mockVehicle} />);
+    render(
+      <VehicleDetailModal
+        isOpen={true}
+        onClose={() => {}}
+        vehicle={mockVehicle}
+      />,
+    );
     await waitFor(() => {
       expect(screen.getByText(/129 km\/h/i)).toBeInTheDocument();
       expect(screen.getByText(/4.62 m/)).toBeInTheDocument();
@@ -115,72 +147,70 @@ describe("VehicleDetailModal", () => {
   });
 
   it("renders axles weight left and right", async () => {
-  render(<VehicleDetailModal isOpen={true} onClose={() => {}} vehicle={mockVehicle} />);
-  
-  await waitFor(() => {
-    // Left side
-    // const leftCard = screen.getByText("Left Side").closest("div");
-    // expect(leftCard).toBeTruthy();
-    // expect(within(leftCard!).getByText((content) => content.includes("Axle 1"))).toBeInTheDocument();
-    // expect(within(leftCard!).getByText((content) => content.includes("6t"))).toBeInTheDocument();
-    // expect(within(leftCard!).getByText((content) => content.includes("Axle 2"))).toBeInTheDocument();
-    // expect(within(leftCard!).getByText((content) => content.includes("4.5t"))).toBeInTheDocument();
-    const leftCard = screen.getByText("Left Side").closest(".border-green-800");
-expect(leftCard).toHaveTextContent("Axle 1");
-expect(leftCard).toHaveTextContent("0.6 t");
-expect(leftCard).toHaveTextContent("Axle 2");
-expect(leftCard).toHaveTextContent("0.45 t");
-
-    // Right side
-    // const rightCard = screen.getByText("Right Side").closest("div");
-    // expect(rightCard).toBeTruthy();
-    // expect(within(rightCard!).getByText((content) => content.includes("Axle 1"))).toBeInTheDocument();
-    // expect(within(rightCard!).getByText((content) => content.includes("6 t"))).toBeInTheDocument();
-    // expect(within(rightCard!).getByText((content) => content.includes("Axle 2"))).toBeInTheDocument();
-    // expect(within(rightCard!).getByText((content) => content.includes("4.5 t"))).toBeInTheDocument();
-     const rightCard = screen.getByText("Right Side").closest(".border-green-800");
-expect(rightCard).toHaveTextContent("Axle 1");
-expect(rightCard).toHaveTextContent("0.6 t");
-expect(rightCard).toHaveTextContent("Axle 2");
-expect(rightCard).toHaveTextContent("0.45 t");
-  });
-});
-
-//   it("renders legal limits cards", async () => {
-//     render(<VehicleDetailModal isOpen={true} onClose={() => {}} vehicle={mockVehicle} />);
-//     await waitFor(() => {
-//       expect(screen.getByText(/Max Weight/i)).toBeInTheDocument();
-//     //   expect(screen.getByText(/0t/i)).toBeInTheDocument(); // limit
-//     //   expect(screen.getByText(/2.1t/i)).toBeInTheDocument(); // actual
-//     expect(screen.getByText((content) => content.includes("2.1"))).toBeInTheDocument();
-//   expect(screen.getByText((content) => content.includes("0"))).toBeInTheDocument();
-//     });
-//   });
-it("renders legal limits cards", async () => {
-  render(<VehicleDetailModal isOpen={true} onClose={() => {}} vehicle={mockVehicle} />);
-
-  await waitFor(() => {
-    // Get all cards
-    const legalLimitCards = screen.getAllByTestId("legal-limits-card");
-
-    // Find the one that contains "Max Weight"
-    const maxWeightCard = legalLimitCards.find((card) =>
-      card.textContent?.includes("Max Weight")
+    render(
+      <VehicleDetailModal
+        isOpen={true}
+        onClose={() => {}}
+        vehicle={mockVehicle}
+      />,
     );
 
-    if (!maxWeightCard) {
-      throw new Error("Max Weight legal limits card not found");
-    }
+    await waitFor(() => {
+      // Left side
+      const leftCard = screen
+        .getByText("Left Side")
+        .closest(".border-green-800");
+      expect(leftCard).toHaveTextContent("Axle 1");
+      expect(leftCard).toHaveTextContent("0.6 t");
+      expect(leftCard).toHaveTextContent("Axle 2");
+      expect(leftCard).toHaveTextContent("0.45 t");
 
-    const withinCard = within(maxWeightCard);
-
-    // Check actual weight
-    expect(withinCard.getByText((content) => content.includes("2.1"))).toBeInTheDocument();
-
-    // Check maximum allowed weight
-    expect(withinCard.getByText((content) => content.includes("0"))).toBeInTheDocument();
+      // Right side
+      const rightCard = screen
+        .getByText("Right Side")
+        .closest(".border-green-800");
+      expect(rightCard).toHaveTextContent("Axle 1");
+      expect(rightCard).toHaveTextContent("0.6 t");
+      expect(rightCard).toHaveTextContent("Axle 2");
+      expect(rightCard).toHaveTextContent("0.45 t");
+    });
   });
-});
+
+  it("renders legal limits cards", async () => {
+    render(
+      <VehicleDetailModal
+        isOpen={true}
+        onClose={() => {}}
+        vehicle={mockVehicle}
+      />,
+    );
+
+    await waitFor(() => {
+      // Get all cards
+      const legalLimitCards = screen.getAllByTestId("legal-limits-card");
+
+      // Find the one that contains "Max Weight"
+      const maxWeightCard = legalLimitCards.find((card) =>
+        card.textContent?.includes("Max Weight"),
+      );
+
+      if (!maxWeightCard) {
+        throw new Error("Max Weight legal limits card not found");
+      }
+
+      const withinCard = within(maxWeightCard);
+
+      // Check actual weight
+      expect(
+        withinCard.getByText((content) => content.includes("2.1")),
+      ).toBeInTheDocument();
+
+      // Check maximum allowed weight
+      expect(
+        withinCard.getByText((content) => content.includes("0")),
+      ).toBeInTheDocument();
+    });
+  });
 
   it("renders vehicle images if provided", async () => {
     const vehicleWithPhotos = {
@@ -194,7 +224,13 @@ it("renders legal limits cards", async () => {
     };
     mockedAxios.get.mockResolvedValueOnce({ data: mockDetailWithPhotos });
 
-    render(<VehicleDetailModal isOpen={true} onClose={() => {}} vehicle={vehicleWithPhotos} />);
+    render(
+      <VehicleDetailModal
+        isOpen={true}
+        onClose={() => {}}
+        vehicle={vehicleWithPhotos}
+      />,
+    );
     await waitFor(() => {
       expect(screen.getAllByRole("img")).toHaveLength(2);
     });
@@ -202,15 +238,29 @@ it("renders legal limits cards", async () => {
 
   it("shows loading message while fetching data", async () => {
     mockedAxios.get.mockImplementationOnce(() => new Promise(() => {})); // never resolves
-    render(<VehicleDetailModal isOpen={true} onClose={() => {}} vehicle={mockVehicle} />);
+    render(
+      <VehicleDetailModal
+        isOpen={true}
+        onClose={() => {}}
+        vehicle={mockVehicle}
+      />,
+    );
     expect(screen.getByText(/Loading vehicle data/i)).toBeInTheDocument();
   });
 
   it("shows error message on fetch failure", async () => {
     mockedAxios.get.mockRejectedValueOnce(new Error("API Error"));
-    render(<VehicleDetailModal isOpen={true} onClose={() => {}} vehicle={mockVehicle} />);
+    render(
+      <VehicleDetailModal
+        isOpen={true}
+        onClose={() => {}}
+        vehicle={mockVehicle}
+      />,
+    );
     await waitFor(() =>
-      expect(screen.getByText(/Failed to load vehicle data/i)).toBeInTheDocument()
+      expect(
+        screen.getByText(/Failed to load vehicle data/i),
+      ).toBeInTheDocument(),
     );
   });
 });
