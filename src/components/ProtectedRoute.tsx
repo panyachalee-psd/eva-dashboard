@@ -4,11 +4,13 @@ import React from "react";
 export default function ProtectedRoute({ children }: { children: React.ReactNode }) {
   const token = sessionStorage.getItem("auth_token");
 
-    // allow access in test/preview environment
-  const isPreview = import.meta.env.VITE_APP_IS_PREVIEW === "true";
-  console.log("Preview mode:", import.meta.env.VITE_APP_IS_PREVIEW);
+  // allow access on preview, development, or tester mode
+  const allowPublic = import.meta.env.VITE_APP_ALLOW_PUBLIC_ACCESS === "true";
 
-  if (isPreview) return children;
+  if (allowPublic) {
+    console.log("Public access mode enabled");
+    return children; // skip token check
+  }
 
   if (!token) {
     return <Navigate to="/404" replace />;
@@ -16,3 +18,16 @@ export default function ProtectedRoute({ children }: { children: React.ReactNode
 
   return <>{children}</>;
 }
+
+// import { Navigate } from "react-router-dom";
+// import React from "react";
+
+// export default function ProtectedRoute({ children }: { children: React.ReactNode }) {
+//   const token = sessionStorage.getItem("auth_token");
+
+//   if (!token) {
+//     return <Navigate to="/404" replace />;
+//   }
+
+//   return <>{children}</>;
+// }
