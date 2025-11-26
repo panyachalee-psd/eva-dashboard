@@ -9,12 +9,16 @@ export default function ProtectedRoute({ children }: ProtectedRouteProps) {
   // 1️⃣ Check for token in sessionStorage
   const token = sessionStorage.getItem("auth_token");
 
-  // 2️⃣ Check if we are in preview mode
+   console.log("ProtectedRoute Preview mode:", import.meta.env.VITE_APP_IS_PREVIEW);
   const isPreview = import.meta.env.VITE_APP_IS_PREVIEW === "true";
+  console.log("isPreview:", isPreview);
+
+  // 2️⃣ Check if we are in preview mode
+//   const isPreview = import.meta.env.VITE_APP_IS_PREVIEW === "true";
 
   // Debug log
-  console.log("Preview mode:", import.meta.env.VITE_APP_IS_PREVIEW);
-  console.log("Token:", token);
+//   console.log("Preview mode:", import.meta.env.VITE_APP_IS_PREVIEW);
+//   console.log("Token:", token);
 
   // 3️⃣ Allow access if in preview mode
   if (isPreview) {
