@@ -5,7 +5,9 @@ import NotFound from "@/components/Notfound";
 import ProtectedRoute from "@/components/ProtectedRoute";
 
 export default function App() {
+  console.log("Preview mode:", import.meta.env.VITE_APP_IS_PREVIEW);
   return (
+    
     <Routes>
       {/* token verification */}
       <Route path="/verify" element={<VerifyToken />} />
@@ -25,6 +27,10 @@ export default function App() {
 
       {/* fallback for everything else */}
       <Route path="*" element={<NotFound />} />
+
+       <div>
+      Preview mode: {import.meta.env.VITE_APP_IS_PREVIEW || "undefined"}
+    </div>
     </Routes>
   );
 }
