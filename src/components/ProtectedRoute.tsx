@@ -4,12 +4,13 @@ import React from "react";
 export default function ProtectedRoute({ children }: { children: React.ReactNode }) {
   const token = sessionStorage.getItem("auth_token");
 
-  // allow access on preview, development, or tester mode
   const allowPublic = import.meta.env.VITE_APP_ALLOW_PUBLIC_ACCESS === "true";
 
+  console.log("VITE_APP_ALLOW_PUBLIC_ACCESS =", import.meta.env.VITE_APP_ALLOW_PUBLIC_ACCESS);
+  console.log("allowPublic =", allowPublic);
+
   if (allowPublic) {
-    console.log("Public access mode enabled");
-    return children; // skip token check
+    return children;
   }
 
   if (!token) {
