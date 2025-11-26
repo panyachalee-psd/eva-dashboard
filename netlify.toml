@@ -3,4 +3,4 @@
   to = "/index.html"
   status = 200
 [context.production.environment]
-  VITE_APP_ALLOW_PUBLIC_ACCESS = true
+  VITE_APP_ALLOW_PUBLIC_ACCESS = "true"
