@@ -50,8 +50,8 @@ export function WIMDashboardOverall() {
     return `${value / 1000} t`;
   }
 
-  if (loading) return <p>Loading dashboard...</p>;
-  if (error) return <p>Error loading dashboard: {error.message}</p>;
+  if (loading) return <p> {t("loading_dashboard")} </p>;
+  if (error) return <p> {t("error_loading_dashboard")} {error.message} </p>;
 
   return (
     <div>

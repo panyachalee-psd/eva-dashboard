@@ -11,6 +11,8 @@
   "Close": "Close",
   "download_report": "Download Report",
   "loading_vehicle_data": "Loading vehicle data...",
+  "loading_dashboard": "Loading dashboard...",
+  "error_loading_dashboard": "Error loading dashboard",
 
 
    "_comment_wimdashboard": "this is for Wim Dashboard section!!!",
