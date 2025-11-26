@@ -96,10 +96,15 @@ export default function DashboardLayout() {
             onClick={() => setMobileSidebarOpen(false)}
           />
         )}
-        <main
+        {/* <main
           className={`flex-1 overflow-auto transition-all duration-300 ${
             isMobile ? "ml-0" : sidebarCollapsed ? "ml-2" : "ml-2"
           }`}
+        >
+          <div className="p-4 md:p-6">{renderContent()}</div>
+        </main> */}
+         <main
+          className="flex-1 overflow-auto transition-all duration-300 ml-0"
         >
           <div className="p-4 md:p-6">{renderContent()}</div>
         </main>

@@ -77,8 +77,8 @@ function formatKm(value: number) {
   return `${value} km/h`;
 }
 
-const TowtStatusTemplate = (value: string) => {
-  const isNV = value === "NV";
+const TowtStatusTemplate = (value: boolean, str: string) => {
+  const isNV = value === true;
   return (
     <span
       style={{
@@ -92,7 +92,7 @@ const TowtStatusTemplate = (value: string) => {
         textTransform: "uppercase",
       }}
     >
-      {isNV ? "NV" : value}
+      {str}
     </span>
   );
 };
@@ -354,7 +354,7 @@ export default function CurrentMeasureTable(): JSX.Element {
               field="towt_valid"
               header={t("status")}
               headerStyle={{ textAlign: "center" }}
-              body={(rowData) => TowtStatusTemplate(rowData.towt_valid)}
+              body={(rowData) => TowtStatusTemplate(rowData.isOverweight,rowData.towt_valid)}
             />
           </DataTable>
         </CardContent>
