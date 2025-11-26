@@ -5,7 +5,7 @@ import { VehcleViolDetail, VehicleList } from "../../models/vehicleModel";
 import { Scale, AlertTriangle, Truck, Camera, Gauge } from "lucide-react";
 import { useTranslation } from "react-i18next";
 import { Card, CardContent, CardHeader, CardTitle } from "../ui/card";
-import "./vehicleDetailModal.css";
+import "./VehicleDetailModal.css";
 import { Divider } from "primereact/divider";
 
 interface VehicleDetailModalProps {
