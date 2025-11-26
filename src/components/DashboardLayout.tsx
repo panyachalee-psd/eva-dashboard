@@ -14,7 +14,7 @@ import { UserDashboard } from "../components/UserDashboard";
 import { ProjectDashboard } from "../components/ProjectDashboard";
 
 export default function DashboardLayout() {
-  const [activeTab, setActiveTab] = useState("overview");
+  const [activeTab, setActiveTab] = useState("wim");
   const [sidebarCollapsed, setSidebarCollapsed] = useState(false);
   const [isMobile, setIsMobile] = useState(false);
   const [mobileSidebarOpen, setMobileSidebarOpen] = useState(false);
@@ -59,7 +59,7 @@ export default function DashboardLayout() {
       case "project":
         return <ProjectDashboard />;
       default:
-        return <OverviewDashboard />;
+        return <WIMDashboard />;
     }
   };
 

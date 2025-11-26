@@ -5,8 +5,11 @@ import ViolatedTable from "../components/wimViolate/Violated";
 import { WIMDashboardOverall } from "../components/WimDashboardOverall/DashboardOverall";
 import { WIMStatOverall } from "../components/WimStatOverall/StatOverall";
 import { useTranslation } from "react-i18next";
+import DownloadReportModal from "./DownloadReportModal";
+import React, { useState } from "react";
 
 export function WIMDashboard() {
+  const [showModal, setShowModal] = useState(false);
   const { t } = useTranslation();
   return (
     <div className="space-y-6">
@@ -45,6 +48,7 @@ export function WIMDashboard() {
                 size="sm"
                 className="hidden sm:flex"
                 startIcon="pi-folder-open"
+                 onClick={() => setShowModal(true)}
               >
                 {t("download_report")}
               </Button>
@@ -55,6 +59,11 @@ export function WIMDashboard() {
           <CurrentMeasureTable />
         </CardContent>
       </Card>
+
+        <DownloadReportModal
+        visible={showModal}
+        onHide={() => setShowModal(false)}
+      />
     </div>
   );
 }

@@ -1,12 +1,12 @@
 import {
-  Monitor,
-  Navigation,
-  Gauge,
-  BarChart3,
-  Settings,
-  Cloud,
-  Users,
-  FolderOpen,
+  // Monitor,
+  // Navigation,
+  // Gauge,
+  // BarChart3,
+  // Settings,
+  // Cloud,
+  // Users,
+  // FolderOpen,
   ChevronLeft,
   ChevronRight,
   Scale,
@@ -41,18 +41,18 @@ export function Sidebar({
   // onMobileClose
 }: SidebarProps) {
   const menuItems: MenuItem[] = [
-    { id: "overview", label: "Overview", icon: BarChart3 },
-    { id: "vms", label: "VMS", icon: Monitor },
-    { id: "lms", label: "LMS", icon: Navigation },
-    { id: "wim", label: "WIM", icon: Scale },
-    { id: "iot", label: "IoT Tools", icon: Gauge },
+    // { id: "overview", label: "Overview", icon: BarChart3 },
+    // { id: "vms", label: "VMS", icon: Monitor },
+    // { id: "lms", label: "LMS", icon: Navigation },
+    { id: "wim", label: "WIM", icon: Scale }
+    // { id: "iot", label: "IoT Tools", icon: Gauge },
     // { id: "weather", label: "Weather Sensor", icon: Cloud },
     // { id: "radar", label: "Radar", icon: Radar },
     // { id: "security", label: "Security", icon: Shield },
-    { id: "user", label: "User", icon: Users },
-    { id: "project", label: "Project", icon: FolderOpen },
-    { id: "settings", label: "Settings", icon: Settings },
-    { id: "testapi", label: "test Api", icon: Cloud },
+    // { id: "user", label: "User", icon: Users },
+    // { id: "project", label: "Project", icon: FolderOpen },
+    // { id: "settings", label: "Settings", icon: Settings },
+    // { id: "testapi", label: "test Api", icon: Cloud },
   ];
 
   const sidebarClasses = cn(
