@@ -5,7 +5,6 @@ import NotFound from "@/components/Notfound";
 import ProtectedRoute from "@/components/ProtectedRoute";
 
 export default function App() {
-  console.log("Preview mode:", import.meta.env.VITE_APP_IS_PREVIEW);
   return (
     
     <Routes>
