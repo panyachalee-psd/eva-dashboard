@@ -98,7 +98,7 @@ export default function DashboardLayout() {
         )}
         <main
           className={`flex-1 overflow-auto transition-all duration-300 ${
-            isMobile ? "ml-0" : sidebarCollapsed ? "ml-4" : "ml-4"
+            isMobile ? "ml-0" : sidebarCollapsed ? "ml-2" : "ml-2"
           }`}
         >
           <div className="p-4 md:p-6">{renderContent()}</div>
