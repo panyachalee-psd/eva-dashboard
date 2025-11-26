@@ -28,9 +28,9 @@ export default function App() {
       {/* fallback for everything else */}
       <Route path="*" element={<NotFound />} />
 
-       <div>
+       {/* <div>
       Preview mode: {import.meta.env.VITE_APP_IS_PREVIEW || "undefined"}
-    </div>
+    </div> */}
     </Routes>
   );
 }
