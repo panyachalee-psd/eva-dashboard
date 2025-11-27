@@ -34,6 +34,7 @@
     "clsx": "*",
     "cmdk": "^1.1.1",
     "embla-carousel-react": "^8.6.0",
+    "express": "^5.1.0",
     "framer-motion": "^12.23.24",
     "i18next": "^25.6.0",
     "i18next-browser-languagedetector": "^8.2.0",
@@ -100,6 +101,6 @@
     "lint": "eslint \"src/**/*.{js,ts,jsx,tsx}\" --max-warnings 0",
     "lint:fix": "eslint \"src/**/*.{js,ts,jsx,tsx}\" --fix",
     "format": "prettier --write \"src/**/*.{js,ts,jsx,tsx,css,scss,md,json}\"",
-    "start": "serve -s dist -p 3002"
+    "start": "serve -s build -p 3002"
   }
 }
