@@ -33,7 +33,7 @@ module.exports = {
     watch: false,         // ปิด watch เพื่อไม่ให้รีสตาร์ทเมื่อไฟล์เปลี่ยนใน Production
     env: {
       NODE_ENV: "production",
-      PORT: 3000          // กำหนดพอร์ต (ต้องตรงกับใน script 'start')
+      PORT: 3002          // กำหนดพอร์ต (ต้องตรงกับใน script 'start')
     },
     // การตั้งค่า Log File (ไม่บังคับ แต่แนะนำ)
     error_file: "./logs/eva-dashboard-err.log",

@@ -100,6 +100,6 @@
     "lint": "eslint \"src/**/*.{js,ts,jsx,tsx}\" --max-warnings 0",
     "lint:fix": "eslint \"src/**/*.{js,ts,jsx,tsx}\" --fix",
     "format": "prettier --write \"src/**/*.{js,ts,jsx,tsx,css,scss,md,json}\"",
-    "start": "serve -s dist -p 3000"
+    "start": "serve -s dist -p 3002"
   }
 }
