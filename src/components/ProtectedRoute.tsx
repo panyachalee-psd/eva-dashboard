@@ -6,8 +6,8 @@ export default function ProtectedRoute({ children }: { children: React.ReactNode
 
   const allowPublic = import.meta.env.VITE_APP_ALLOW_PUBLIC_ACCESS === "true";
 
-  console.log("VITE_APP_ALLOW_PUBLIC_ACCESS =", import.meta.env.VITE_APP_ALLOW_PUBLIC_ACCESS);
-  console.log("allowPublic =", allowPublic);
+  // console.log("VITE_APP_ALLOW_PUBLIC_ACCESS =", import.meta.env.VITE_APP_ALLOW_PUBLIC_ACCESS);
+  // console.log("allowPublic =", allowPublic);
 
   if (allowPublic) {
     return children;

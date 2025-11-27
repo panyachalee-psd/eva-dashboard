@@ -5,6 +5,7 @@ import { Button } from "primereact/button";
 import { Chips } from "primereact/chips";
 import axios from "axios";
 import type { ChipsChangeEvent } from "primereact/chips";
+import { useTranslation } from "react-i18next";
 
 interface Props {
   visible: boolean;
@@ -18,6 +19,7 @@ export default function DownloadReportModal({ visible, onHide }: Props) {
   const [invalidEmails, setInvalidEmails] = useState<string[]>([]);
   const [formError, setFormError] = useState<string>("");
 
+  const { t } = useTranslation();
   const isValidEmail = (email: string) => /^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(email);
 
   const validateEmails = (list: string[]) => {
@@ -51,11 +53,11 @@ export default function DownloadReportModal({ visible, onHide }: Props) {
       return;
     }
 
-    setLoading(true);
+    setLoading(true); 
 
     try {
       await axios.post("/api/send-wim-report", {
-        emails,
+        email: emails.toString(),
         date: date.toISOString().split("T")[0],
       });
 
@@ -70,7 +72,7 @@ export default function DownloadReportModal({ visible, onHide }: Props) {
 
   return (
     <Dialog
-      header="Download WIM Daily Report"
+      header={t("download_wim")}
       visible={visible}
       onHide={onHide}
       style={{ width: "40rem" }}
@@ -81,13 +83,13 @@ export default function DownloadReportModal({ visible, onHide }: Props) {
       <div className="flex flex-col space-y-5 gap-6 my-2">
         {/* EMAIL (CHIPS) */}
         <div className="flex flex-col gap-2 bg-red-50 p-3 rounded-xl">
-          <label className="text-gray-500 text-sm">E-mail</label>
+          <label className="text-gray-500 text-sm">{t("email")}</label>
 
           <Chips
             value={emails}
             onChange={handleEmailChange}
             separator=","
-            placeholder="Enter emails and press Enter"
+            placeholder={t("enter_emails")}
             className={`w-full bg-transparent border-0 shadow-none ${
               invalidEmails.length > 0 ? "p-invalid" : ""
             }`}
@@ -100,13 +102,13 @@ export default function DownloadReportModal({ visible, onHide }: Props) {
 
           {/* Email-level validation */}
           {invalidEmails.length > 0 && (
-            <p className="text-red-500 text-xs">Invalid e-mail(s): {invalidEmails.join(", ")}</p>
+            <p className="text-red-500 text-xs">{t("invalid_email")}: {invalidEmails.join(", ")}</p>
           )}
         </div>
 
         {/* DATE PICKER */}
         <div className="flex flex-col gap-2 bg-red-50 p-3 rounded-xl">
-          <label className="text-gray-500 text-sm">Date</label>
+          <label className="text-gray-500 text-sm">{t("date")}</label>
 
           <Calendar
             value={date}
@@ -126,7 +128,7 @@ export default function DownloadReportModal({ visible, onHide }: Props) {
         {/* SEND BUTTON */}
         <div className="flex justify-end my-2">
           <Button
-            label="Send Report to E-mail"
+            label={t("send_report")}
             severity="success"
             className="w-fit ml-auto px-5 py-2 mt-4"
             onClick={handleSend}

@@ -32,7 +32,7 @@ describe("<WIMDashboardOverall />", () => {
     // Do not resolve axios yet
     mockedAxios.get.mockImplementation(() => new Promise(() => {}));
     render(<WIMDashboardOverall />);
-    expect(screen.getByText("Loading dashboard...")).toBeInTheDocument();
+    expect(screen.getByText(/loading_dashboard/i)).toBeInTheDocument();
   });
 
   test("renders StatCards with correct values after API success", async () => {
@@ -62,8 +62,9 @@ describe("<WIMDashboardOverall />", () => {
     render(<WIMDashboardOverall />);
 
     await waitFor(() =>
-      expect(screen.getByText(/Error loading dashboard/i)).toBeInTheDocument(),
+      expect(screen.getByText(/error_loading_dashboard/i)).toBeInTheDocument(),
     );
+    expect(screen.getByText(/Network Error/)).toBeInTheDocument();
     expect(screen.getByText(/Network Error/)).toBeInTheDocument();
   });
 
@@ -99,4 +100,32 @@ describe("<WIMDashboardOverall />", () => {
     );
     expect(cards.length).toBe(4);
   });
+
+  // test("renders StatCards with correct values after API success when get null as value", async () => {
+  //   mockedAxios.get.mockResolvedValue({ data: mockNullData });
+  //   render(<WIMDashboardOverall />);
+  //   // await waitFor(() => screen.getByText("avg_vehicle_weight"));
+
+  //   // const cards = screen.getAllByText(
+  //   //   /avg_vehicle_weight|vehicles_today|violations_detected|avg_vehicle_speed/,
+  //   // );
+  //   // expect(cards.length).toBe(4);
+  //    // Wait for StatCards to appear
+  //   await waitFor(() =>
+  //     expect(screen.getByText("avg_vehicle_weight")).toBeInTheDocument(),
+  //   );
+
+  //   // Titles
+  //   expect(screen.getByText("avg_vehicle_weight")).toBeInTheDocument();
+  //   expect(screen.getByText("vehicles_today")).toBeInTheDocument();
+  //   expect(screen.getByText("violations_detected")).toBeInTheDocument();
+  //   expect(screen.getByText("avg_vehicle_speed")).toBeInTheDocument();
+
+  //   // Formatted values
+  //   expect(screen.getByText("0 t ")).toBeInTheDocument(); // 18000 / 1000
+  //   expect(screen.getByText("3226")).toBeInTheDocument();
+  //   expect(screen.getByText("108")).toBeInTheDocument();
+  //   expect(screen.getByText("98.5 km/h")).toBeInTheDocument();
+  // });
+
 });

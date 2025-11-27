@@ -46,7 +46,7 @@ export function WIMDashboardOverall() {
   }, []);
 
   function formatT(value: number) {
-    if (value == null) return "-";
+    // if (value == null) return "-";
     return `${value / 1000} t`;
   }
 

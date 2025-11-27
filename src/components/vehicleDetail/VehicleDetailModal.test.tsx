@@ -53,7 +53,7 @@ const mockVehicleDetail: VehcleViolDetail = {
     plate_num_front: mockVehicle.plate_num_front,
     country_code_front: mockVehicle.country_code_front,
     car_class: "1",
-    car_type: "",
+    car_type: "Truck",
     multiple_wheel: true,
     photo_front_plate: "BASE64_FRONT",
     photo_overview: "BASE64_OVERVIEW",
@@ -111,7 +111,7 @@ describe("VehicleDetailModal", () => {
     );
     await waitFor(() =>
       expect(
-        screen.getByText(/Vehicle Weight Information - 2DHK895/i),
+        screen.getByText(/vehicle_weight_information - 2DHK895/i),
       ).toBeInTheDocument(),
     );
   });
@@ -158,20 +158,20 @@ describe("VehicleDetailModal", () => {
     await waitFor(() => {
       // Left side
       const leftCard = screen
-        .getByText("Left Side")
+        .getByText(/left_side/i)
         .closest(".border-green-800");
-      expect(leftCard).toHaveTextContent("Axle 1");
+      expect(leftCard).toHaveTextContent(/axle 1/i);
       expect(leftCard).toHaveTextContent("0.6 t");
-      expect(leftCard).toHaveTextContent("Axle 2");
+      expect(leftCard).toHaveTextContent(/axle 2/i);
       expect(leftCard).toHaveTextContent("0.45 t");
 
       // Right side
       const rightCard = screen
-        .getByText("Right Side")
+        .getByText(/right_side/i)
         .closest(".border-green-800");
-      expect(rightCard).toHaveTextContent("Axle 1");
+      expect(rightCard).toHaveTextContent(/axle 1/i);
       expect(rightCard).toHaveTextContent("0.6 t");
-      expect(rightCard).toHaveTextContent("Axle 2");
+      expect(rightCard).toHaveTextContent(/axle 2/i);
       expect(rightCard).toHaveTextContent("0.45 t");
     });
   });
@@ -191,7 +191,7 @@ describe("VehicleDetailModal", () => {
 
       // Find the one that contains "Max Weight"
       const maxWeightCard = legalLimitCards.find((card) =>
-        card.textContent?.includes("Max Weight"),
+        card.textContent?.includes("max_weight"),
       );
 
       if (!maxWeightCard) {
@@ -245,7 +245,7 @@ describe("VehicleDetailModal", () => {
         vehicle={mockVehicle}
       />,
     );
-    expect(screen.getByText(/Loading vehicle data/i)).toBeInTheDocument();
+    expect(screen.getByText(/loading_vehicle_data/i)).toBeInTheDocument();
   });
 
   it("shows error message on fetch failure", async () => {

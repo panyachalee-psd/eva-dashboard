@@ -45,6 +45,12 @@
   "search_readings_by": "Search readings by Plate Number, Province, Vehicle Type",
   "status": "Status",
   "recent_system_activity": "Recent System Activity",
+  "download_wim": "Download WIM Daily Report",
+  "email": "E-mail",
+  "invalid_email": "Invalid e-mail(s)",
+  "date": "Date",
+  "send_report": "Send Report to E-mail",
+  "enter_emails": "Enter emails and press Enter",
 
   "_comment_vehicle_detail": "this is for Vehicle Detail section!!!",
   "vehicle_weight_information": "Vehicle Weight Information",

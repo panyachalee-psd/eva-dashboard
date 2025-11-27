@@ -43,6 +43,12 @@
   "search_readings_by ": "ค้นหารถโดยป้ายทะเบียน, จังหวัด, ประเภท...",
   "status": "สถานะ",
   "recent_system_activity": "กิจกรรมระบบล่าสุด",
+  "download_wim": "ดาวน์โหลดรายงานระบบชั่งน้ำหนักเคลื่อนที่ประจำวัน",
+  "email": "อีเมล",
+  "invalid_email": "รูปแบบอีเมลไม่ถูกต้อง",
+  "date": "วันที่",
+  "send_report": "ส่งรายงาน",
+  "enter_emails": "กรอกอีเมลและกดปุ่ม enter",
 
 
   "_comment_vehicle_detail": "this is for Vehicle Detail section!!!",
