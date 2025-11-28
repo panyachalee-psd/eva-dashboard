@@ -1,4 +1,4 @@
-import React, { useState } from "react";
+import React, { useState, useRef } from "react";
 import { Dialog } from "primereact/dialog";
 import { Calendar } from "primereact/calendar";
 import { Button } from "primereact/button";
@@ -7,11 +7,14 @@ import { Chips } from "primereact/chips";
 import type { ChipsChangeEvent } from "primereact/chips";
 import { useTranslation } from "react-i18next";
 import api from "@/utils/axios";
-import { showSuccessPopup, showWarningPopup } from '@/utils/alertPopup'
+import { showSuccessPopup, showWarningPopup } from "@/utils/alertPopup";
 
 interface Props {
   visible: boolean;
   onHide: () => void;
+}
+interface ChipsPrivate {
+  inputEl?: HTMLInputElement;
 }
 
 export default function DownloadReportModal({ visible, onHide }: Props) {
@@ -20,6 +23,8 @@ export default function DownloadReportModal({ visible, onHide }: Props) {
   const [loading, setLoading] = useState(false);
   const [invalidEmails, setInvalidEmails] = useState<string[]>([]);
   const [formError, setFormError] = useState<string>("");
+  const chipsRef = useRef<Chips>(null);
+  const chipsWrapperRef = useRef<HTMLDivElement | null>(null);
 
   const { t } = useTranslation();
   const isValidEmail = (email: string) => /^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(email);
@@ -37,53 +42,90 @@ export default function DownloadReportModal({ visible, onHide }: Props) {
   };
 
   const handleSend = async () => {
-  // const { t } = useTranslation();
-  setFormError("");
+    // const { t } = useTranslation();
+    setFormError("");
 
-  // ---- LOCAL VALIDATION ----
-  if (emails.length === 0) {
-    setFormError(t("error_no_email"));
-    return;
-  }
+    // ---- LOCAL VALIDATION ----
+    if (emails.length === 0) {
+      setFormError(t("error_no_email"));
+      return;
+    }
 
-  if (invalidEmails.length > 0) {
-    setFormError(t("error_invalid_email"));
-    return;
-  }
+    if (invalidEmails.length > 0) {
+      setFormError(t("error_invalid_email"));
+      return;
+    }
 
-  if (!date) {
-    setFormError(t("error_no_date"));
-    return;
-  }
+    if (!date) {
+      setFormError(t("error_no_date"));
+      return;
+    }
 
-  setLoading(true);
+    setLoading(true);
 
- try {
-  const res = await api.post(`/report/email`, {
-    email: emails.toString(),
-    date: date.toISOString().split("T")[0],
-  });
+    try {
+      const res = await api.post(`/report/email`, {
+        email: emails.toString(),
+        date: date.toISOString().split("T")[0],
+      });
 
-  // ---- STATUS CHECKING ----
-  if (res.data?.message === "Success") {
-    setEmails([])
-    showSuccessPopup(t("email_report_sent"));
-  } else {
-    showWarningPopup(
-      t("unexpected_status").replace("{{status}}", res.status.toString())
-    );
-  }
+      // ---- STATUS CHECKING ----
+      if (res.data?.message === "Success") {
+        setEmails([]);
+        showSuccessPopup(t("email_report_sent"));
+      } else {
+        showWarningPopup(t("unexpected_status").replace("{{status}}", res.status.toString()));
+      }
 
-  onHide(); // close modal
-} catch (error) {
-  // Error popup already shown by interceptor
-  setFormError(t("error_send_report"));
-  console.log(error);
-  
-} finally {
-    setLoading(false);
-  }
-};
+      onHide(); // close modal
+    } catch (error) {
+      // Error popup already shown by interceptor
+      setFormError(t("error_send_report"));
+      console.log(error);
+    } finally {
+      setLoading(false);
+    }
+  };
+
+  const handleBlurCommitEmail = (e: React.FocusEvent<HTMLInputElement>) => {
+    const value = e.target.value.trim();
+
+    if (!value) {
+      clearInput();
+      return;
+    }
+
+    // split if user pasted multiple emails
+    const newEmails = value
+      .split(",")
+      .map((v) => v.trim())
+      .filter(Boolean);
+
+    let validToAdd: string[] = [];
+    let invalid: string[] = [];
+
+    newEmails.forEach((em) => {
+      if (!isValidEmail(em)) invalid.push(em);
+      else if (!emails.includes(em)) validToAdd.push(em);
+    });
+
+    if (validToAdd.length > 0) {
+      setEmails((prev) => [...prev, ...validToAdd]);
+    }
+
+    setInvalidEmails(invalid);
+    clearInput();
+  };
+
+  const clearInput = () => {
+    const wrapper = chipsWrapperRef.current;
+    if (!wrapper) return;
+
+    const input = wrapper.querySelector("input") as HTMLInputElement | null;
+    if (input) {
+      input.value = "";
+    }
+  };
 
   return (
     <Dialog
@@ -100,7 +142,7 @@ export default function DownloadReportModal({ visible, onHide }: Props) {
         <div className="flex flex-col gap-2 bg-red-50 p-3 rounded-xl">
           <label className="text-gray-500 text-sm">{t("email")}</label>
 
-          <Chips
+          {/* <Chips
             value={emails}
             onChange={handleEmailChange}
             separator=","
@@ -113,6 +155,32 @@ export default function DownloadReportModal({ visible, onHide }: Props) {
               container: { className: "w-full" }, // inner wrapper
               input: { className: "w-full" }, // actual input
             }}
+            onBlur={handleBlurCommitEmail}
+          /> */}
+          <Chips
+            // ref={chipsRef}
+            value={emails}
+            onChange={handleEmailChange}
+            placeholder={t("enter_emails")}
+            separator=","
+            className={`w-full bg-transparent border-0 shadow-none ${
+              invalidEmails.length > 0 ? "p-invalid" : ""
+            }`}
+            pt={{
+              root: {
+                ref: chipsWrapperRef, // <-- The correct DOM ref
+                className: "w-full",
+              },
+              container: { className: "w-full" },
+              input: { className: "w-full" },
+            }}
+            // pt={{
+            //   root: { className: "w-full" },
+            //   container: { className: "w-full" },
+            //   input: { className: "w-full" },
+            //   ref: chipsWrapperRef,
+            // }}
+            onBlur={handleBlurCommitEmail}
           />
 
           {/* Email-level validation */}

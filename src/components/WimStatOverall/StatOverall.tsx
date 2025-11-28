@@ -56,8 +56,8 @@ export function WIMStatOverall() {
         );
 
         // ---- API 2: Weight Distribution ----
-        const weightRes = await axios.get(
-          `http://85.204.247.82:3007/dashboard/weight-distribution?weight_bins_kg=10000`,
+        const weightRes = await api.get(
+          `/dashboard/weight-distribution?weight_bins_kg=10000`,
         );
 
         const weightData = weightRes.data?.data || weightRes.data || [];

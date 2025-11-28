@@ -25,6 +25,11 @@ type DataTableFilterMeta = {
   [key: string]: DataTableFilterMetaData | DataTableOperatorFilterMetaData;
 };
 
+interface DashboardResponse {
+  data: VehicleList[];
+  totalItems: number;
+}
+
 async function fetchCurVehicleFromApi({
   page,
   rows,
@@ -43,7 +48,7 @@ async function fetchCurVehicleFromApi({
       sortOrder === 1 ? "ASC" : sortOrder === -1 ? "DESC" : undefined;
     const searchText = filters.global?.value?.toString() ?? "";
 
-    const res = await api.get(`/dashboard`, {
+    const res = await api.get<DashboardResponse>(`/dashboard`, {
       params: {
         page: page,
         perPage: rows,

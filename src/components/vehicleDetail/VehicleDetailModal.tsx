@@ -41,7 +41,7 @@ const VehicleDetailModal: React.FC<VehicleDetailModalProps> = ({
       setError(null);
 
       try {
-        const res = await api.get(
+        const res = await api.get<VehcleViolDetail>(
           `/dashboard/detail/${vehicle.id}`,
         );
         setVehicleDetail(res.data);
