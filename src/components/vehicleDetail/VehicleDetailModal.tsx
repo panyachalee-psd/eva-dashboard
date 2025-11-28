@@ -74,22 +74,22 @@ const VehicleDetailModal: React.FC<VehicleDetailModalProps> = ({
 
   function formatT(value: number) {
     if (value == null) return "N/A";
-    return `${value / 1000} t`;
+    return `${(value / 1000).toFixed(2)} t`;
   }
 
   function formatTNounit(value: number) {
     if (value == null) return "N/A";
-    return `${value / 1000}`;
+    return `${(value / 1000).toFixed(2)}`;
   }
 
   function formatM(value: number) {
     if (value == null) return "N/A";
-    return `${value / 100} m`;
+    return `${(value / 100).toFixed(2)} m`;
   }
 
   function formatMNounit(value: number) {
     if (value == null) return "N/A";
-    return `${value / 100}`;
+    return `${(value / 100).toFixed(2)}`;
   }
 
   function formatKm(value: number) {

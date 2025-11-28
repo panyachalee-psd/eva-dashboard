@@ -69,12 +69,12 @@ async function fetchCurVehicleFromApi({
 
 function formatT(value: number) {
   if (value == null) return "-";
-  return `${value / 1000} t`;
+  return `${(value / 1000).toFixed(2)} t`;
 }
 
 function formatM(value: number) {
   if (value == null) return "-";
-  return `${value / 100} m`;
+  return `${(value / 100).toFixed(2)} m`;
 }
 
 function formatKm(value: number) {

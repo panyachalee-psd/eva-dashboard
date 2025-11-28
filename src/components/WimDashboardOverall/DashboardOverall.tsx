@@ -48,7 +48,7 @@ export function WIMDashboardOverall() {
 
   function formatT(value: number) {
     // if (value == null) return "-";
-    return `${value / 1000} t`;
+    return `${(value / 1000).toFixed(2)} t`;
   }
 
   if (loading) return <p> {t("loading_dashboard")} </p>;

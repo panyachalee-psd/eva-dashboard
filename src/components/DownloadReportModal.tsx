@@ -13,9 +13,9 @@ interface Props {
   visible: boolean;
   onHide: () => void;
 }
-interface ChipsPrivate {
-  inputEl?: HTMLInputElement;
-}
+// interface ChipsPrivate {
+//   inputEl?: HTMLInputElement;
+// }
 
 export default function DownloadReportModal({ visible, onHide }: Props) {
   const [emails, setEmails] = useState<string[]>([]);
@@ -23,7 +23,7 @@ export default function DownloadReportModal({ visible, onHide }: Props) {
   const [loading, setLoading] = useState(false);
   const [invalidEmails, setInvalidEmails] = useState<string[]>([]);
   const [formError, setFormError] = useState<string>("");
-  const chipsRef = useRef<Chips>(null);
+  // const chipsRef = useRef<Chips>(null);
   const chipsWrapperRef = useRef<HTMLDivElement | null>(null);
 
   const { t } = useTranslation();
