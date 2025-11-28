@@ -7,7 +7,7 @@ import { useTranslation } from "react-i18next";
 import { Card, CardContent, CardHeader, CardTitle } from "../ui/card";
 import "./VehicleDetailModal.css";
 import { Divider } from "primereact/divider";
-
+import api from "@/utils/axios";
 interface VehicleDetailModalProps {
   isOpen: boolean;
   onClose: () => void;
@@ -41,8 +41,8 @@ const VehicleDetailModal: React.FC<VehicleDetailModalProps> = ({
       setError(null);
 
       try {
-        const res = await axios.get(
-          `http://85.204.247.82:3007/dashboard/detail/${vehicle.id}`,
+        const res = await api.get(
+          `/dashboard/detail/${vehicle.id}`,
         );
         setVehicleDetail(res.data);
       } catch {

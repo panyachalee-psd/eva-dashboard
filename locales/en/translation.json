@@ -13,6 +13,9 @@
   "loading_vehicle_data": "Loading vehicle data...",
   "loading_dashboard": "Loading dashboard...",
   "error_loading_dashboard": "Error loading dashboard",
+  "error": "Error",
+  "success": "Success",
+  "warning": "Warning",
 
 
    "_comment_wimdashboard": "this is for Wim Dashboard section!!!",
@@ -51,6 +54,8 @@
   "date": "Date",
   "send_report": "Send Report to E-mail",
   "enter_emails": "Enter emails and press Enter",
+  "email_report_sent": "Please check your email",
+  "unexpected_status": "Unexpected Status",
 
   "_comment_vehicle_detail": "this is for Vehicle Detail section!!!",
   "vehicle_weight_information": "Vehicle Weight Information",

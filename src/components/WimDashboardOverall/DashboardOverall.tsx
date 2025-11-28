@@ -1,9 +1,10 @@
 import { useState, useEffect } from "react";
-import axios from "axios";
+// import axios from "axios";
 import { Scale, AlertTriangle, Truck, Gauge } from "lucide-react";
 import { StatCard } from "../StatCard";
 import { useTranslation } from "react-i18next";
 import { WimSummary } from "../../models/vehicleModel";
+import api from "@/utils/axios";
 
 export function WIMDashboardOverall() {
   const { t } = useTranslation();
@@ -25,8 +26,8 @@ export function WIMDashboardOverall() {
   useEffect(() => {
     async function fetchDashboardData() {
       try {
-        const response = await axios.get<WimSummary>(
-          "http://85.204.247.82:3007/dashboard/summary",
+        const response = await api.get<WimSummary>(
+          "/dashboard/summary",
         );
 
         setStats(response.data);

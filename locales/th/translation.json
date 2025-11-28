@@ -11,7 +11,9 @@
   "Close": "ปิด",
   "download_report": "ดาวน์โหลดรายงาน",
   "loading_vehicle_data": "กำลังโหลดข้อมูลยานพาหนะ...",
-
+  "error": "ผิดพลาด",
+  "success": "สำเร็จ",
+  "warning": "คำเตือน",
 
    "_comment_wimdashboard": "this is for Wim Dashboard section!!!",
   "weight_in_motion_system": "ระบบชั่งน้ำหนักเคลื่อนที่ (WIM)",
@@ -49,6 +51,8 @@
   "date": "วันที่",
   "send_report": "ส่งรายงาน",
   "enter_emails": "กรอกอีเมลและกดปุ่ม enter",
+  "email_report_sent": "โปรดตรวจสอบในอีเมลของท่าน",
+  "unexpected_status": "มีบางอย่างเกิดขึ้น",
 
 
   "_comment_vehicle_detail": "this is for Vehicle Detail section!!!",

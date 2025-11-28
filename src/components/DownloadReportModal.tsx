@@ -3,9 +3,11 @@ import { Dialog } from "primereact/dialog";
 import { Calendar } from "primereact/calendar";
 import { Button } from "primereact/button";
 import { Chips } from "primereact/chips";
-import axios from "axios";
+// import axios from "axios";
 import type { ChipsChangeEvent } from "primereact/chips";
 import { useTranslation } from "react-i18next";
+import api from "@/utils/axios";
+import { showSuccessPopup, showWarningPopup } from '@/utils/alertPopup'
 
 interface Props {
   visible: boolean;
@@ -35,40 +37,53 @@ export default function DownloadReportModal({ visible, onHide }: Props) {
   };
 
   const handleSend = async () => {
-    setFormError(""); // reset errors
+  // const { t } = useTranslation();
+  setFormError("");
 
-    // Required validation
-    if (emails.length === 0) {
-      setFormError("Please enter at least one e-mail.");
-      return;
-    }
+  // ---- LOCAL VALIDATION ----
+  if (emails.length === 0) {
+    setFormError(t("error_no_email"));
+    return;
+  }
 
-    if (invalidEmails.length > 0) {
-      setFormError("Some e-mails are invalid. Please fix them.");
-      return;
-    }
+  if (invalidEmails.length > 0) {
+    setFormError(t("error_invalid_email"));
+    return;
+  }
 
-    if (!date) {
-      setFormError("Please select a date.");
-      return;
-    }
+  if (!date) {
+    setFormError(t("error_no_date"));
+    return;
+  }
 
-    setLoading(true); 
+  setLoading(true);
 
-    try {
-      await axios.post("/api/send-wim-report", {
-        email: emails.toString(),
-        date: date.toISOString().split("T")[0],
-      });
+ try {
+  const res = await api.post(`/report/email`, {
+    email: emails.toString(),
+    date: date.toISOString().split("T")[0],
+  });
 
-      onHide(); // close modal
-    } catch (error) {
-      console.error(error);
-      setFormError("Failed to send report. Please try again.");
-    } finally {
-      setLoading(false);
-    }
-  };
+  // ---- STATUS CHECKING ----
+  if (res.data?.message === "Success") {
+    setEmails([])
+    showSuccessPopup(t("email_report_sent"));
+  } else {
+    showWarningPopup(
+      t("unexpected_status").replace("{{status}}", res.status.toString())
+    );
+  }
+
+  onHide(); // close modal
+} catch (error) {
+  // Error popup already shown by interceptor
+  setFormError(t("error_send_report"));
+  console.log(error);
+  
+} finally {
+    setLoading(false);
+  }
+};
 
   return (
     <Dialog
@@ -102,7 +117,9 @@ export default function DownloadReportModal({ visible, onHide }: Props) {
 
           {/* Email-level validation */}
           {invalidEmails.length > 0 && (
-            <p className="text-red-500 text-xs">{t("invalid_email")}: {invalidEmails.join(", ")}</p>
+            <p className="text-red-500 text-xs">
+              {t("invalid_email")}: {invalidEmails.join(", ")}
+            </p>
           )}
         </div>
 

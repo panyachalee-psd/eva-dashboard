@@ -14,6 +14,7 @@ import {
 } from "recharts";
 import { useTranslation } from "react-i18next";
 import { TraffViolation, WeightDistri } from "../../models/vehicleModel";
+import api from "@/utils/axios";
 
 interface WeightDistributionChartItem {
   range: string;
@@ -34,8 +35,8 @@ export function WIMStatOverall() {
     async function loadData() {
       try {
         // ---- API 1: Traffic Violations ----
-        const trafficRes = await axios.get(
-          `http://85.204.247.82:3007/dashboard/traffic-violation`,
+        const trafficRes = await api.get(
+          `/dashboard/traffic-violation`,
         );
 
         // Assuming API returns { data: [...] }

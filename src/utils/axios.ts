@@ -1,5 +1,5 @@
 import axios from "axios";
-import { showErrorPopup } from "./errorPopup";
+import { showErrorPopup } from "./alertPopup";
 
 // Create Axios instance
 const api = axios.create({
@@ -28,7 +28,6 @@ api.interceptors.response.use(
       error?.response?.data?.message ||
       error?.message ||
       "Something went wrong";
-
     showErrorPopup(msg); // <-- your popup function
 
     return Promise.reject(error); // Keep existing behavior
