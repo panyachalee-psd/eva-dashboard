@@ -114,10 +114,10 @@ export function WIMStatOverall() {
                   weightDistributionData.length > 0
                     ? weightDistributionData
                     : [
-                        { range: "0-1000", count: 0 },
-                        { range: "1001-2000", count: 0 },
-                        { range: "2001-3000", count: 0 },
-                        { range: "3001-4000", count: 0 },
+                        { range: "0-10000", count: 0 },
+                        { range: "10001-20000", count: 0 },
+                        { range: "20001-30000", count: 0 },
+                        { range: "30001-40000", count: 0 },
                       ]
                 }
                 data-testid="weight-chart"

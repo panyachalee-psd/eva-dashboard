@@ -8,6 +8,7 @@ import type { ChipsChangeEvent } from "primereact/chips";
 import { useTranslation } from "react-i18next";
 import api from "@/utils/axios";
 import { showSuccessPopup, showWarningPopup } from "@/utils/alertPopup";
+import { format } from "date-fns";
 
 interface Props {
   visible: boolean;
@@ -61,17 +62,20 @@ export default function DownloadReportModal({ visible, onHide }: Props) {
       return;
     }
 
+    const formatted = format(date, "yyyy-MM-dd");
+
     setLoading(true);
 
     try {
       const res = await api.post(`/report/email`, {
         email: emails.toString(),
-        date: date.toISOString().split("T")[0],
+        date: formatted,
       });
 
       // ---- STATUS CHECKING ----
       if (res.data?.message === "Success") {
         setEmails([]);
+        setDate(new Date())
         showSuccessPopup(t("email_report_sent"));
       } else {
         showWarningPopup(t("unexpected_status").replace("{{status}}", res.status.toString()));
