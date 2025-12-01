@@ -263,12 +263,12 @@ const VehicleDetailModal: React.FC<VehicleDetailModalProps> = ({
               <div className="mt-4 grid grid-cols-1 md:grid-cols-2 gap-4">
                 {/* LEFT SIDE */}
                 <Card className="border border-green-800 p-4">
-                  <CardHeader>
+                  <CardHeader className="px-0 pt-0">
                     <CardTitle className="text-sm font-semibold">
                       {t("left_side")}
                     </CardTitle>
                   </CardHeader>
-                  <CardContent className="space-y-3">
+                  <CardContent className="space-y-3 px-0 pt-0">
                     {vehicleDetail?.axles.map((axle, i) => (
                       <div
                         key={i}
@@ -285,12 +285,12 @@ const VehicleDetailModal: React.FC<VehicleDetailModalProps> = ({
 
                 {/* RIGHT SIDE */}
                 <Card className="border border-green-800 p-4">
-                  <CardHeader>
+                  <CardHeader className="px-0 pt-0">
                     <CardTitle className="text-sm font-semibold">
                       {t("right_side")}
                     </CardTitle>
                   </CardHeader>
-                  <CardContent className="space-y-3">
+                  <CardContent className="space-y-3 px-0 pt-0">
                     {vehicleDetail?.axles.map((axle, i) => (
                       <div
                         key={i}
@@ -322,7 +322,7 @@ const VehicleDetailModal: React.FC<VehicleDetailModalProps> = ({
                     actual: formatTNounit(
                       vehicleDetail?.vehicle_measures[0]?.towt_kg,
                     ),
-                    unit: "t",
+                    unit: " t",
                   },
                   {
                     label: t("max_length"),
@@ -360,7 +360,7 @@ const VehicleDetailModal: React.FC<VehicleDetailModalProps> = ({
                         <p
                           className={`text-sm ${isOver ? "text-red-600" : "text-green-600"}`}
                         >
-                          {item.actual}
+                          {item.actual} t
                           {isOver}
                         </p>
                       </CardContent>
