@@ -132,12 +132,12 @@ export default function DownloadReportModal({ visible, onHide }: Props) {
       header={t("download_wim")}
       visible={visible}
       onHide={onHide}
-      style={{ width: "40rem" }}
+      style={{ width: "30rem" }}
       modal
       draggable={false}
       closeOnEscape
     >
-      <div className="flex flex-col space-y-5 gap-6 my-2">
+      <div className="flex flex-col space-y-5 gap-6">
         {/* EMAIL (CHIPS) */}
         <div className="flex flex-col gap-2 bg-red-50 p-3 rounded-xl">
           <label className="text-gray-500 text-sm">{t("email")}</label>
@@ -215,7 +215,7 @@ export default function DownloadReportModal({ visible, onHide }: Props) {
           <Button
             label={t("send_report")}
             severity="success"
-            className="w-fit ml-auto px-5 py-2 mt-4"
+            className="w-fit ml-auto px-5 py-2 mt-4 p-button-sm"
             onClick={handleSend}
             loading={loading}
           />
