@@ -76,6 +76,7 @@ export default function DownloadReportModal({ visible, onHide }: Props) {
       if (res.data?.message === "Success") {
         setEmails([]);
         setDate(new Date())
+      // Error popup already shown by interceptor
         showSuccessPopup(t("email_report_sent"));
       } else {
         showWarningPopup(t("unexpected_status").replace("{{status}}", res.status.toString()));
@@ -83,9 +84,16 @@ export default function DownloadReportModal({ visible, onHide }: Props) {
 
       onHide(); // close modal
     } catch (error) {
+      const logData = {
+      level: "info",
+      timestamp: new Date(),
+      message: error,
+      component: "DownloadReportModal",
+      userId: "1234"
+      }
       // Error popup already shown by interceptor
       setFormError(t("error_send_report"));
-      console.log(error);
+      console.log(JSON.stringify(logData));
     } finally {
       setLoading(false);
     }

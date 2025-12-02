@@ -94,8 +94,10 @@
     "vite": "6.3.5"
   },
   "scripts": {
-    "dev": "vite",
+    "dev": "vite --mode dev",
     "build": "vite build",
+    "dev-build": "vite build --mode dev",
+    "prd-build": "vite build --mode prd",
     "test": "jest --coverage",
     "test:watch": "jest --watch",
     "lint": "eslint \"src/**/*.{js,ts,jsx,tsx}\" --max-warnings 0",

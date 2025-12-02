@@ -3,7 +3,7 @@ import { showErrorPopup } from "./alertPopup";
 
 // Create Axios instance
 const api = axios.create({
-  baseURL: import.meta.env.VITE_API_URL,
+  baseURL: `${import.meta.env.APP_WIM_API_URL.toString()}:${Number(import.meta.env.APP_WIM_API_PORT)}`,
 });
 
 // ---- REQUEST INTERCEPTOR ----
